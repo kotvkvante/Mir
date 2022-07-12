@@ -42,19 +42,23 @@ void unit_print_info(unit_t* unit);
 //static bool _warrior_can_move_to(unit_t* unit, int x, int y);
 //static void _warrior_draw(unit_t* unit);
 
+static int _is_units_init = false;
 unit_t test_unit;
 unit_t test_unit2;
 unit_t test_unit3;
 unit_t test_unit4;
 
+
 void units_init()
 {
+//    if(_is_units_init) return;
     unit_init(&test_unit,  WARRIOR, TEAM_RED, 4, 4);
     unit_init(&test_unit2, ARCHER, TEAM_RED, 5, 5);
     unit_init(&test_unit3, WARRIOR, TEAM_RED, 3, 4);
     unit_init(&test_unit4, WARRIOR, TEAM_BLUE, 2, 4);
 
     unit_print_info(&test_unit);
+//    _is_units_init = true;
 }
 
 void unit_init(unit_t* unit, int type, int team, int x, int y)
