@@ -89,6 +89,7 @@ void kernel_update_state(float dt)
 
 void kernel_handle_events()
 {
+    for()
     kernel.is_running = !glfwWindowShouldClose(kernel.window);
 	handle_events();
 
