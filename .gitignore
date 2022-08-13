@@ -1,0 +1,15 @@
+### CodeBlocks ###
+# specific to CodeBlocks IDE
+*.layout
+*.depend
+*.mak
+*.bmarks
+*.cscope_file_list
+*.cbp
+# generated directories
+bin/
+obj/
+
+
+### Test files ###
+*.png

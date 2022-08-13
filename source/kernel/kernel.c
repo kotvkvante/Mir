@@ -124,14 +124,10 @@ float kernel_get_window_width()
 static int frames = 0;
 void kernel_tick()
 {
-//    kernel.timer_end   = kernel.timer_start;
-//    kernel.timer_start = glfwGetTime();
-//    kernel.delta = kernel.timer_start - kernel.timer_end;
-
     kernel.timer_end = glfwGetTime();
     frames++;
 
-    if(frames == 10)
+    if(frames == FRAME_DELTA)
     {
         kernel.delta = kernel.timer_end - kernel.timer_start;
         frames = 0;
@@ -143,7 +139,7 @@ void kernel_tick()
 int kernel_get_fps()
 {
 
-    return (int)(10.0 / kernel.delta);
+    return (int)(FRAME_DELTA / kernel.delta);
 }
 
 

@@ -1,6 +1,8 @@
 #ifndef KERNEL_H_INCLUDED
 #define KERNEL_H_INCLUDED
 
+#define FRAME_DELTA 60
+
 typedef struct point2f_t point2f_t;
 
 void kernel_init();

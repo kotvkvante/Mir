@@ -40,6 +40,7 @@ void handle_events()
     glfwPollEvents();
 }
 
+
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
     int p0, p1;

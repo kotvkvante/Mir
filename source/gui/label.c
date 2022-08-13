@@ -22,7 +22,7 @@ static int _count = 0;
 
 label_t test;
 label_t label_selected_tile;
-label_t label_fps;
+label_t label_fps = {.id = -1};
 label_t label_main;
 
 void labels_init()
@@ -32,7 +32,7 @@ void labels_init()
     label_init(&label_main, L">>> Mir <<<", (point2i_t){50, kernel_get_window_height() - 50}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
 //    label_init(&test, L"||TEST|@#$%^&*~/*-.5/,\nAsSS\n\nMy profile: Мой профиль", (point2i_t){50, 100}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
     label_init(&label_selected_tile, L"Selected tile: %s", (point2i_t){50, 150}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
-//    label_init(&label_fps, L"fps: %s", (point2i_t){50, 600}, (point3uc_t){16, 255, 128}, (point3uc_t){255, 127, 0});
+    label_init(&label_fps, L"FPS: %s", (point2i_t){50, 600}, (point3uc_t){16, 255, 128}, (point3uc_t){255, 127, 0});
 }
 
 
@@ -85,8 +85,7 @@ void labels_update()
 //    else
 //        label_set_text_s(&label_selected_tile, L"tile: %ls", L"No tile selected.");
 
-
-//    label_set_text_d(&label_fps, L"fps: %d", kernel_get_fps() );
+    if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
 }
 
 void labels_handle_hovered()

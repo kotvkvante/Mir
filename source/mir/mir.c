@@ -71,7 +71,10 @@ void mir_init()
 
     mir_map_set_size(DEFAULT_MAP_SIZE);
     mir.tiles = malloc(sizeof(tile_t) * DEFAULT_MAP_SIZE * DEFAULT_MAP_SIZE);
-    mir.selected_tile = (point2i_t){3, 5};
+    mir.selected_tile = (point2i_t)
+    {
+        3, 5
+    };
 
     mir_map_gen();
 }
@@ -118,8 +121,8 @@ void mir_map_handle_mouse_button(int btn, int action)
 
     return;
 
-    deselect:
-        mir_map_deselect();
+deselect:
+    mir_map_deselect();
 
 
 }
@@ -129,7 +132,8 @@ void mir_turn()
 {
     if(mir.turn == TEAM_COUNT - 1)
     {
-        mir.turn = TEAM_RED; return;
+        mir.turn = TEAM_RED;
+        return;
     };
     mir.turn++;
 }
@@ -271,7 +275,8 @@ team_t* mir_map_get_team()
 
 void mir_map_add_active(int x, int y)
 {
-    int k = 0; int s = x * mir.size + y;
+    int k = 0;
+    int s = x * mir.size + y;
 
     for(int i = -1; i <= 1; i++)
     {
@@ -346,9 +351,15 @@ void mir_print_map()
 
 void mir_draw_team()
 {
-    draw_rectangle_xy_wh_rgb((point2i_t){((int)kernel_get_window_width()) - 30, ((int)kernel_get_window_height()) - 30},
-                             (point2i_t){20, 20},
-                             team_colors[mir.turn]);
+    draw_rectangle_xy_wh_rgb((point2i_t)
+    {
+        ((int)kernel_get_window_width()) - 30, ((int)kernel_get_window_height()) - 30
+    },
+    (point2i_t)
+    {
+        20, 20
+    },
+    team_colors[mir.turn]);
 }
 
 
