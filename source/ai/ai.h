@@ -3,15 +3,16 @@
 
 #include "../math/point.h"
 
-void ai_handle_events();
-
-
-
-typedef struct
+typedef struct ai_t
 {
     int id;
-    colorf_rgb_t;
+    int team;
+    colorf_rgb_t color;
 } ai_t;
 
+void bot_init(ai_t* bot);
+void bot_handle_events();
+
+void bot_process_input(int id);
 
 #endif // AI_H_INCLUDED

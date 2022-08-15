@@ -50,6 +50,7 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
         printf("Nothing =(\n");
         break;
     case MAP_INDEX:
+        if(!mir_is_started()) break;
         if(action == GLFW_RELEASE) break;
         mir_map_handle_mouse_button(button, action);
         break;
@@ -124,10 +125,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //        camera_adjust_xy(vec.x, vec.y);
 //    }
 
-    if(key == GLFW_KEY_R && action == GLFW_PRESS)
-    {
-        camera_reset_view();
-    }
+    if(KEY_PRESS(GLFW_KEY_ENTER)) mir_start();
+    if(key == GLFW_KEY_R && action == GLFW_PRESS) camera_reset_view();
+
 //    if(key == GLFW_KEY_ENTER && action == GLFW_PRESS)
 //    {
 //        text_push_new_line(&hello);
@@ -151,21 +151,21 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //    if(KEY_PRESS(GLFW_KEY_I)) unit_print_info(&test_unit);
 //    if(KEY_PRESS(GLFW_KEY_M)) draw_map_to_texture();
 //    if(KEY_PRESS(GLFW_KEY_N)) draw_gui_to_texture();
-    if(KEY_PRESS(GLFW_KEY_B)) render_frame_to_texture();
+//    if(KEY_PRESS(GLFW_KEY_B)) render_frame_to_texture();
     if(KEY_PRESS(GLFW_KEY_C)) system("clear");
     if(KEY_PRESS(GLFW_KEY_G)) mir_map_gen();
-    if(KEY_PRESS(GLFW_KEY_W)) mir_turn();
-    if(KEY_PRESS(GLFW_KEY_D)) mir_map_deselect();
 
-
-
-    if(KEY_PRESS(GLFW_KEY_P)) mir_map_draw_pickmap();
-
-    if(KEY_PRESS(GLFW_KEY_F2))
+    if(mir_is_started())
     {
-        graphics_reload_program();
+        if(KEY_PRESS(GLFW_KEY_W)) mir_turn();
+        if(KEY_PRESS(GLFW_KEY_D)) mir_map_deselect();
     }
+    if(KEY_PRESS(GLFW_KEY_P)) mir_map_draw_pickmap();
+    if(KEY_PRESS(GLFW_KEY_F2)) graphics_reload_program();
     if(KEY_PRESS(GLFW_KEY_ESCAPE)) kernel_stop();
+
+
+
 }
 
 static const char* get_character_string(int codepoint)

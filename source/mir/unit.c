@@ -5,11 +5,21 @@
 #include "../math/point.h"
 #include "../utils/utils.h"
 #include "../graphics/texture_map.h"
+#include "../kernel/error_handler.h"
 
 #include "mir.h"
+
 #include "unit.h"
 #include "tile.h"
 #include "team.h"
+
+
+
+unit_t* _units_red[10]; int red_id = 0;
+unit_t* _units_blue[10]; int blue_id = 0;
+
+unit_t* units_by_team[2] = {[TEAM_RED] = _units_red, [TEAM_BLUE] = _units_blue};
+
 
 typedef enum {
     FORTIFIED = 1 << 0,
@@ -80,6 +90,20 @@ void unit_init(unit_t* unit, int type, int team, int x, int y)
 
     units[units_count] = unit;
     units_count++;
+
+    if(team == TEAM_BLUE)
+    {
+        _units_blue[blue_id] = unit;
+        blue_id++;
+    }
+
+    if(team == TEAM_RED)
+    {
+        _units_red[red_id] = unit;
+        red_id++;
+    }
+
+
 }
 
 int unit_get_texture(unit_t* unit)
@@ -101,7 +125,7 @@ void unit_print_info(unit_t* unit)
 
 bool unit_can_attack(unit_t* unit, tile_t* tile_dest)
 {
-
+    return false;
 }
 
 bool unit_cat_move(unit_t* unit, tile_t* tile_dest)
@@ -143,6 +167,9 @@ int unit_can_move(unit_t* unit, tile_t* tile_dest)
 
 void unit_move(unit_t* unit, tile_t* tile_dest)
 {
+    if(unit == NULL) { error_msg(DEFAULT_C, "Unit NULL."); return; }
+    if(tile_dest == NULL) { error_msg(DEFAULT_C, "Tile NULL."); return; }
+
     unit->x = tile_dest->x;
     unit->y = tile_dest->y;
 
@@ -157,7 +184,33 @@ void unit_move(unit_t* unit, tile_t* tile_dest)
     else unit->texture = _unit_textures[unit->type][unit->team];
 }
 
+void unit_move_xy(int sx, int sy, int ex, int ey)
+{
+    print_2i(sx, sy);
+    tile_t* s = mir_map_get_tile(sx, sy);
+    tile_t* e = mir_map_get_tile(ex, ey);
 
+    if(s == NULL) {error_msg(DEFAULT_C, "Null tile."); }
+
+    unit_move(s->unit, e);
+}
+
+void unit_move_e(event_arg_t* arg)
+{
+    unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey);
+}
+
+void unit_move_e_random(event_arg_t* arg)
+{
+    int dx = 0, dy = 0;
+    do
+    {
+        dx = rand_index(-1, 1);
+        dy = rand_index(-1, 1);
+    } while(((dx == 0) && (dy == 0))); // or: ((ex != 0) || (ey != 0))
+
+    unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.sx + dx, arg->move_unit.sy + dy);
+}
 
 //static bool _warrior_can_move_to(unit_t* unit, int x, int y)
 //{

@@ -1,6 +1,9 @@
 #ifndef UNIT_H_INCLUDED
 #define UNIT_H_INCLUDED
 
+#include "mir_queue.h"
+
+
 typedef struct unit_t unit_t;
 typedef struct tile_t tile_t;
 
@@ -33,5 +36,14 @@ void units_draw();
 int unit_get_texture();
 void unit_print_info(unit_t* unit);
 int unit_can_move(unit_t* unit, tile_t* tile_dest);
+
 void unit_move(unit_t* unit, tile_t* tile_dest);
+void unit_move_xy(int sx, int sy, int ex, int ey);
+void unit_move_e(event_arg_t* arg);
+void unit_move_e_random(event_arg_t* arg);
+
+
+
+
+
 #endif // UNIT_H_INCLUDED

@@ -5,6 +5,8 @@
 
 #include "../math/point.h"
 #include "../graphics/graphics.h"
+#include "../player/player.h"
+
 
 #include "error_handler.h"
 #include "../math/point.h"
@@ -26,8 +28,12 @@
 #include "kernel_t.h"
 
 kernel_t kernel;
+
+extern player_t* players;
+extern ai_t* bots;
 extern mouse_t mouse;
 extern point2f_t _map_pos;
+
 
 void error_callback(int error, const char* description)
 {
@@ -46,9 +52,14 @@ void kernel_init()
     mir_init();
     gui_init();
 
+
     units_init();
+    init_teams();
+    bots_init();
 
 	kernel.is_running = true;
+
+	render_frame_to_texture();
 }
 
 
@@ -71,6 +82,7 @@ void handle_hovered()
         break;
 
         case MAP_INDEX:
+            if(!mir_is_started()) break;
             mir_map_handle_hovered(p0, p1);
         break;
 
@@ -85,14 +97,32 @@ void kernel_update_state(float dt)
 {
     kernel_tick();
     gui_update();
+
 }
+
 
 void kernel_handle_events()
 {
-    for()
     kernel.is_running = !glfwWindowShouldClose(kernel.window);
 	handle_events();
 
+    if(mir_is_started())
+    {
+        switch(mir_get_turn())
+        {
+            case TEAM_RED:
+                player_process_input();
+                break;
+            case TEAM_BLUE:
+                bots_process_input();
+                break;
+            default:
+                error_msg(DEFAULT_C, "Untraced team.");
+                break;
+        }
+
+        mir_handle_events();
+    }
 }
 
 void kernel_set_window_size(float width, float height)

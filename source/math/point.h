@@ -36,4 +36,7 @@ typedef struct colorf_rgb_t
     float r, g, b;
 } colorf_rgb_t;
 
+colorf_rgb_t random_cfrgb();
+
+
 #endif // POINT_H_INCLUDED
