@@ -51,7 +51,10 @@ typedef struct mir_t
 
 
 void mir_init();
+void mir_refresh();
+
 void mir_turn();
+int mir_get_turn();
 
 void mir_start();
 int mir_is_started();
@@ -61,6 +64,7 @@ void mir_end();
 void mir_handle_events(void);
 
 tile_t* mir_map_get_tile(int x, int y);
+tile_t* mir_map_get_tile_safe(int x, int y);
 tile_t* mir_map_get_tile_i(int i);
 
 int mir_map_get_tile_from_screen(int x, int y, int* ox, int* oy);

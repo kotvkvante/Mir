@@ -1,6 +1,9 @@
 #ifndef UNIT_H_INCLUDED
 #define UNIT_H_INCLUDED
 
+#include <stdbool.h>
+
+
 #include "mir_queue.h"
 
 
@@ -22,6 +25,8 @@ typedef struct unit_t
     int heath;
     int state;
 
+    int energy;
+
 // deprected
 //    unit_attack_t attack;
 //    unit_move_t move;
@@ -30,16 +35,26 @@ typedef struct unit_t
 
 
 void units_init();
+void units_refresh();
 
 void units_draw();
 
+
+
 int unit_get_texture();
 void unit_print_info(unit_t* unit);
-int unit_can_move(unit_t* unit, tile_t* tile_dest);
+
+bool unit_can_move(unit_t* unit, tile_t* tile_dest);
+bool unit_can_move_xy(int sx, int sy, int ex, int ey);
 
 void unit_move(unit_t* unit, tile_t* tile_dest);
 void unit_move_xy(int sx, int sy, int ex, int ey);
+
 void unit_move_e(event_arg_t* arg);
+void unit_attack_e(event_arg_t* arg);
+void unit_swap_e(event_arg_t* arg);
+
+
 void unit_move_e_random(event_arg_t* arg);
 
 

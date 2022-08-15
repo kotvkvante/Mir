@@ -17,6 +17,8 @@
 #include "../mir/mir.h"
 #include "../gui/gui.h"
 #include "../mir/unit.h"
+#include "../mir/team.h"
+#include "../ai/ai.h"
 
 
 #include "window_events.h"

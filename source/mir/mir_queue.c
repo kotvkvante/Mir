@@ -51,6 +51,7 @@ bool mqueue_event_dequeue(mir_event_t* event)
 
     *event = queue.events[queue.rear];
     queue.rear++;
+    return true;
 }
 
 bool mqueue_fevent_enqueue(event_t event)

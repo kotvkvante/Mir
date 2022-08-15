@@ -445,6 +445,8 @@ void tile_get_info_str(tile_t* tile, char* str, int size)
 
 void tile_get_info_wstr(tile_t* tile, wchar_t* str, int size)
 {
+    int x = -1, y = -1, e = -1;
+    if(tile->entities[UNIT] != NO_UNIT) { x = tile->unit->x; y = tile->unit->y; e = tile->unit->energy; }
     swprintf(str, size, PATTERN_TILE_INFO_WSTR(tile));
 }
 

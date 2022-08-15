@@ -86,75 +86,107 @@ void mir_end()   { mir.state = MIR_END;   }
 int mir_is_started() { return (mir.state == MIR_START); }
 
 
-int mir_map_get_selected_tile_type()
-{
-//    return 1;
-}
+//int mir_map_get_selected_tile_type()
+//{
+//    return mir_map_get_selected_tile()
+//}
 
 
 void mir_map_handle_mouse_button(int btn, int action)
 {
     tile_t* selected_tile = mir_map_get_selected_tile(NULL, NULL);
     tile_t* hovered_tile  = mir_map_get_hovered_tile(NULL, NULL);
+    event_f f = NULL;
 
-    if( (mir.selected_tile.x == mir.hovered_tile.x) && (mir.selected_tile.y == mir.hovered_tile.y) )
+    if( hovered_tile && !selected_tile)
     {
-        goto deselect;
+        goto SELECT;
+    }
+
+    if( selected_tile == hovered_tile )
+    {
 //        log_msg(GAME_C, "You already select this tile!");
-        return;
+        goto DESELECT;
     }
 
     if(selected_tile)
     {
-        if(selected_tile->entities[UNIT] != NO_UNIT)
+        if(selected_tile->entities[UNIT] == NO_UNIT)
         {
+            goto SELECT;
+        }
 
-            if(selected_tile->unit->team != mir_get_turn())
-            {
-                mir_map_set_selected_tile(hovered_tile);
-                return;
-            }
+        if(hovered_tile->entities[UNIT] == NO_UNIT)
+        {
+            f = unit_move_e;
+            goto ENQ;
+        }
 
-            tile_t* tile2 = mir_map_get_hovered_tile(NULL, NULL);
-            if(unit_can_move(selected_tile->unit, tile2))
-            {
+        if(hovered_tile->unit->team == mir_get_turn())
+        {
+//            here;
+            f = unit_swap_e;
+            goto ENQ;
+        }
+
+        if(hovered_tile->unit->team != mir_get_turn())
+        {
+            f = unit_attack_e;
+            goto ENQ;
+        }
+
+//        if(hovered_tile->entities[UNIT] != NO_UNIT)
+//        {
+//            if(hovered_tile->unit->team == mir_get_turn())
+//            {
+//                goto SELECT;
+//            }
+//        }
+        if(selected_tile->unit->team != mir_get_turn())
+        {
+            goto SELECT;
+        }
+
+
+        if(unit_can_move(selected_tile->unit, hovered_tile))
+        {
 //                mir_event_t e = {
 //                    .type = MOVE_UNIT,
 //                    .move_unit = {mir.selected_tile.x, mir.selected_tile.y, mir.hovered_tile.x, mir.hovered_tile.y}
 //                };
 //                mqueue_event_enqueue(e);
 
-                event_t e = {
-                    .f = unit_move_e,
-                    .arg.move_unit = {
-                        .sx = mir.selected_tile.x,
-                        .sy = mir.selected_tile.y,
-                        .ex = mir.hovered_tile.x,
-                        .ey = mir.hovered_tile.y
-                    },
-                };
 
-                mqueue_fevent_enqueue(e);
-                mir_turn();
 //                unit_move(selected_tile->unit, tile2);
-            }
-            goto deselect;
-
-            return;
         }
+        goto DESELECT;
     }
 
-    if(mir.hovered_tile.x != -1)
+
+
+
+ENQ:
     {
-        mir_map_set_selected_tile(hovered_tile);
+        event_t e = {
+        .f = f,
+        .arg.move_unit = {
+            .sx = mir.selected_tile.x,
+            .sy = mir.selected_tile.y,
+            .ex = mir.hovered_tile.x,
+            .ey = mir.hovered_tile.y
+        },
+        };
+        mqueue_fevent_enqueue(e);
     }
 
+DESELECT:
+    mir_map_deselect();
     return;
 
-deselect:
-    mir_map_deselect();
-
-
+SELECT:
+//    here;
+    mir_map_set_selected_tile(hovered_tile);
+    return;
 }
 
 
@@ -193,11 +225,18 @@ void mir_handle_events(void)
 //    }
 }
 
+void mir_refresh()
+{
+    units_refresh();
+
+}
 
 void mir_turn()
 {
     if(mir.turn == TEAM_COUNT - 1)
     {
+        mir_refresh();
+
         mir.turn = TEAM_RED;
         return;
     };
@@ -295,6 +334,12 @@ int mir_map_get_selected_tile_unit()
 
 tile_t* mir_map_get_tile(int x, int y)
 {
+    return &mir.tiles[x * DEFAULT_MAP_SIZE + y];
+}
+
+tile_t* mir_map_get_tile_safe(int x, int y)
+{
+    if(!mir_map_is_xy_on_map(x, y)) return NULL;
     return &mir.tiles[x * DEFAULT_MAP_SIZE + y];
 }
 
@@ -792,7 +837,6 @@ void mir_map_handle_hovered(int x, int y)
 //    int y_pos = roundf(y * 8.0f);
 //    print_2i(x, y);
 
-
     if(mir_map_is_xy_on_map(x, y))
     {
         mir_map_set_hovered_tile(x, y);
@@ -808,6 +852,7 @@ void mir_map_handle_hovered_f(float x, float y)
 
     if(mir_map_is_xy_on_map(x_pos, y_pos))
     {
+//        here;
         mir_map_set_selected_tile_xy(x_pos, y_pos);
     }
 }

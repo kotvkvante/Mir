@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "../math/point.h"
 #include "../utils/utils.h"
@@ -13,12 +12,10 @@
 #include "tile.h"
 #include "team.h"
 
-
-
 unit_t* _units_red[10]; int red_id = 0;
 unit_t* _units_blue[10]; int blue_id = 0;
 
-unit_t* units_by_team[2] = {[TEAM_RED] = _units_red, [TEAM_BLUE] = _units_blue};
+unit_t** units_by_team[2] = {[TEAM_RED] = _units_red, [TEAM_BLUE] = _units_blue};
 
 
 typedef enum {
@@ -52,7 +49,7 @@ void unit_print_info(unit_t* unit);
 //static bool _warrior_can_move_to(unit_t* unit, int x, int y);
 //static void _warrior_draw(unit_t* unit);
 
-static int _is_units_init = false;
+//static int _is_units_init = false;
 unit_t test_unit;
 unit_t test_unit2;
 unit_t test_unit3;
@@ -65,10 +62,19 @@ void units_init()
     unit_init(&test_unit,  WARRIOR, TEAM_RED, 4, 4);
     unit_init(&test_unit2, ARCHER, TEAM_RED, 5, 5);
     unit_init(&test_unit3, WARRIOR, TEAM_RED, 3, 4);
-    unit_init(&test_unit4, WARRIOR, TEAM_BLUE, 2, 4);
+    unit_init(&test_unit4, WARRIOR, TEAM_BLUE, 0, 0);
 
     unit_print_info(&test_unit);
 //    _is_units_init = true;
+}
+
+void units_refresh()
+{
+    for(int i = 0; i < units_count; i++)
+    {
+
+        units[i]->energy = 1;
+    }
 }
 
 void unit_init(unit_t* unit, int type, int team, int x, int y)
@@ -77,6 +83,7 @@ void unit_init(unit_t* unit, int type, int team, int x, int y)
     unit->y = y;
     unit->type = type;
     unit->team = team;
+    unit->energy = 1;
 
     unit->texture = _unit_textures[type][team];
 
@@ -128,13 +135,11 @@ bool unit_can_attack(unit_t* unit, tile_t* tile_dest)
     return false;
 }
 
-bool unit_cat_move(unit_t* unit, tile_t* tile_dest)
-{
 
-}
-
-int unit_can_move(unit_t* unit, tile_t* tile_dest)
+bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 {
+    if(unit->energy == 0) return false;
+
     switch(unit->type)
     {
     case WARRIOR:
@@ -164,6 +169,15 @@ int unit_can_move(unit_t* unit, tile_t* tile_dest)
     return true;
 }
 
+bool unit_can_move_xy(int sx, int sy, int ex, int ey)
+{
+    unit_t* unit = mir_map_get_tile(sx, sy)->unit;
+    tile_t* tile = mir_map_get_tile(ex, ey);
+
+    return unit_can_move(unit, tile);
+}
+
+
 
 void unit_move(unit_t* unit, tile_t* tile_dest)
 {
@@ -182,11 +196,46 @@ void unit_move(unit_t* unit, tile_t* tile_dest)
 
     if(tile_dest->entities[FIELD] == SEA) unit->texture = _unit_textures[SHIP][unit->team];
     else unit->texture = _unit_textures[unit->type][unit->team];
+
+
+    unit->energy = 0;
+}
+
+void unit_swap(unit_t* unit, tile_t* tile_dest)
+{
+    if(unit == NULL) { error_msg(DEFAULT_C, "Unit NULL."); return; }
+    if(tile_dest == NULL) { error_msg(DEFAULT_C, "Tile NULL."); return; }
+
+    tile_t* tile_from = unit->tile;
+
+    unit_t* tmp_unit = tile_from->unit;
+    tile_from->unit = tile_dest->unit;
+    tile_dest->unit = tmp_unit;
+
+//    tmp_x = unit->x;
+//    tmp_y = unit->y;
+
+    tile_from->unit->x = tile_from->x;
+    tile_from->unit->y = tile_from->y;
+    tile_dest->unit->x = tile_dest->x;
+    tile_dest->unit->y = tile_dest->y;
+
+    unit->tile = tile_dest;
+    tile_from->unit->tile = tile_from;
+
+//    unit->tile->entities[UNIT] = NO_UNIT;
+//    unit->tile->unit = NULL;
+
+    tile_dest->entities[UNIT] = tile_dest->unit->type;
+    tile_from->entities[UNIT] = tile_from->unit->type;
+
+    tile_dest->unit->energy = 0;
+    tile_from->unit->energy = 0;
 }
 
 void unit_move_xy(int sx, int sy, int ex, int ey)
 {
-    print_2i(sx, sy);
+//    print_2i(sx, sy);
     tile_t* s = mir_map_get_tile(sx, sy);
     tile_t* e = mir_map_get_tile(ex, ey);
 
@@ -197,19 +246,51 @@ void unit_move_xy(int sx, int sy, int ex, int ey)
 
 void unit_move_e(event_arg_t* arg)
 {
-    unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey);
+    if(unit_can_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey))
+    {
+        unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey);
+    }
+
 }
+
+void unit_attack_e(event_arg_t* arg)
+{
+
+}
+
+void unit_swap_e(event_arg_t* arg)
+{
+    unit_t* unit = mir_map_get_tile(arg->move_unit.sx, arg->move_unit.sy)->unit;
+    tile_t* tile = mir_map_get_tile(arg->move_unit.ex, arg->move_unit.ey);
+
+    if( (unit->energy == 0) || (tile->unit->energy == 0) )
+        return;
+
+    unit_swap(unit, tile);
+
+
+}
+
 
 void unit_move_e_random(event_arg_t* arg)
 {
     int dx = 0, dy = 0;
+    int i = 0;
     do
     {
         dx = rand_index(-1, 1);
         dy = rand_index(-1, 1);
-    } while(((dx == 0) && (dy == 0))); // or: ((ex != 0) || (ey != 0))
+        i++;
+        if(!mir_map_is_xy_on_map(arg->move_unit.sx + dx, arg->move_unit.sy + dy)) continue;
+        if(!unit_can_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.sx + dx, arg->move_unit.sy + dy)) continue;
 
-    unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.sx + dx, arg->move_unit.sy + dy);
+
+        unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.sx + dx, arg->move_unit.sy + dy);
+        return;
+    } while(i < 100); // or: ((ex != 0) || (ey != 0))
+
+
+    error_msg_s(DEFAULT_C, "%s: unreacheble!!", (char*)__func__);
 }
 
 //static bool _warrior_can_move_to(unit_t* unit, int x, int y)

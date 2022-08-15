@@ -14,7 +14,7 @@
 #define print_i(a) printf("%s = %d\n", #a, a)
 #define print_f(a) printf("%s = %f\n", #a, a)
 
-#define print_2i(a, b) printf("{\n\t%s = %d\n\t%s = %d\n}\n", #a, a, #b, b);
+#define print_2i(a, b) printf("%s: {\n\t%s = %d\n\t%s = %d\n}\n", __func__, #a, a, #b, b);
 #define print_2f(a, b) printf("{\n\t%s = %f\n\t%s = %f\n}\n", #a, a, #b, b);
 
 #define print_3i(a, b, c) printf("{\n"); print_i(a); print_i(b); print_i(c); printf("}\n")

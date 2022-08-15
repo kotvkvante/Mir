@@ -461,7 +461,7 @@ void wtext_set_text_ex(wtext_t* text, const wchar_t* format, const wchar_t* str)
 
 void wtext_set_text_ex_d(wtext_t* text, const wchar_t* format, int d)
 {
-    if(text->text != NULL) (text->text);
+    if(text->text != NULL) free(text->text);
 
     text->text = malloc(sizeof(wchar_t) * MAX_STR_LENGTH);
     text->length = swprintf(text->text, MAX_STR_LENGTH, format, d);

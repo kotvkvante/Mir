@@ -8,12 +8,12 @@
                                  str_building_info[(int)t->entities[BUILDING]], \
                                  str_unit_info[(int)t->entities[UNIT]]
 
-#define PATTERN_TILE_INFO_WSTR(t) L"Tile[%d, %d] info:\n\tField: %ls\n\tLandscape: %ls\n\tBuilding: %ls\n\tUnit: %ls", \
+#define PATTERN_TILE_INFO_WSTR(t) L"Tile[%d, %d] info:\n\tField: %ls\n\tLandscape: %ls\n\tBuilding: %ls\n\tUnit: %ls [%d %d %d(e)]", \
                                   t->x, t->y, \
                                   wstr_field_info[(int)t->entities[FIELD]], \
                                   wstr_landscape_info[(int)t->entities[LANDSCAPE]], \
                                   wstr_building_info[(int)t->entities[BUILDING]], \
-                                  wstr_unit_info[(int)t->entities[UNIT]]
+                                  wstr_unit_info[(int)t->entities[UNIT]], x, y, e
 
 
 enum tile_entity_types {FIELD, LANDSCAPE, BUILDING, UNIT};

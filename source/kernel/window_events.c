@@ -168,7 +168,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 }
 
-static const char* get_character_string(int codepoint)
+const char* get_character_string(int codepoint)
 {
     static char result[6 + 1];
 
