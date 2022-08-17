@@ -18,6 +18,8 @@ enum texture_map_type_tiles
     TM_TREE,
     TM_SELECTED,
     TM_ACTIVE_TILE,
+    TM_ACTIVE_TILE_ATTACK,
+    TM_ACTIVE_TILE_WATER,
     TM_EMPTY_TEXTURE,
     TM_NO_TEXTURE,
 };
@@ -37,14 +39,17 @@ static const int texture_map_tiles[][2] =
     [TM_RED_SHIP]     = {24, 1},
     [TM_BLUE_SHIP]    = {25, 1},
     [TM_HEALTH_POINT] = {32, 4},
-    [TM_ACTIVE_TILE]  = {38, 1},
+    [TM_ACTIVE_TILE]  = {53, 1},
+    [TM_ACTIVE_TILE_ATTACK] = {52, 1},
+    [TM_ACTIVE_TILE_WATER] = {54, 1},
     [TM_MOUNTAIN] = {40, 2},
     [TM_MOUNTAIN_FOREST] = {41, 1},
     [TM_TREE] = {48, 2},
     [TM_SELECTED] = {56, 1},
-    [TM_ACTIVE_TILE] = {29, 1},
+//    [TM_ACTIVE_TILE] = {29, 1},
     [TM_EMPTY_TEXTURE] = {-1, -1},
     [TM_NO_TEXTURE] = {63, 1},
+
 };
 
 

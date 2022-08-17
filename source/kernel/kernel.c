@@ -54,8 +54,7 @@ void kernel_init()
     mir_init();
     gui_init();
 
-
-    units_init();
+//    units_init(); // duplicate init
     init_teams();
     bots_init();
 
@@ -80,7 +79,7 @@ void handle_hovered()
     switch (gfx_get_pickmap_index((int)mouse.x, (int)mouse.y, &p0, &p1))
     {
         case NULL_INDEX:
-
+            mir_map_unhover();
         break;
 
         case MAP_INDEX:
@@ -90,8 +89,17 @@ void handle_hovered()
 
         case GUI_INDEX:
             gui_handle_hovered(p0, p1);
+            mir_map_unhover();
+        break;
+
+        default:
+            log_msg_s(DEFAULT_C, "%s: Untracked case.", __func__);
         break;
     }
+
+    return;
+
+
 }
 
 

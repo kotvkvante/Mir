@@ -114,6 +114,8 @@ void mir_draw_selected_tile();
 //void mir_map_get_pos(int* x, int* y);
 void mir_map_handle_hovered_f(float x, float y);
 void mir_map_handle_hovered(int x, int y);
+void mir_map_unhover();
+
 //void mir_map_handle_click(float x, float y);
 
 

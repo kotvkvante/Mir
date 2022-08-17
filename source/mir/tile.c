@@ -21,6 +21,7 @@
 
 #include "mir.h"
 #include "unit.h"
+#include "unit_search_path.h"
 
 #define NONE 0
 #define GET(a) texture_map_tiles[a][0]
@@ -325,7 +326,18 @@ void tile_draw(tile_t* tile)
     if(tile->entities[LANDSCAPE]) _tile_draw(lanscape_textures[(int)tile->entities[LANDSCAPE]]);
     if(tile->entities[BUILDING]) _tile_draw(building_textures[(int)tile->entities[BUILDING]]);
 
-    if(tile->entities[UNIT]) _tile_draw(unit_get_texture(tile->unit));
+    if(tile->entities[UNIT])
+    {
+        if(tile->unit->energy > 0)
+        {
+            _tile_draw(unit_get_texture(tile->unit));
+        }
+        else
+        {
+            _tile_draw(unit_get_texture(tile->unit));
+        }
+    }
+
 //    if(tile->entities[UNIT] && (tile->entities[FIELD] == SEA))
 //    {
 //        _tile_draw();

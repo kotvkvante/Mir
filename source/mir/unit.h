@@ -47,6 +47,13 @@ void unit_print_info(unit_t* unit);
 bool unit_can_move(unit_t* unit, tile_t* tile_dest);
 bool unit_can_move_xy(int sx, int sy, int ex, int ey);
 
+bool unit_warrior_can_visit_xy(int x, int y);
+bool unit_archer_can_visit_xy(int x, int y);
+
+bool unit_warrior_can_visit_tile(tile_t* tile_dest);
+bool unit_archer_can_visit_tile(tile_t* tile_dest);
+
+
 void unit_move(unit_t* unit, tile_t* tile_dest);
 void unit_move_xy(int sx, int sy, int ex, int ey);
 
@@ -57,6 +64,7 @@ void unit_swap_e(event_arg_t* arg);
 
 void unit_move_e_random(event_arg_t* arg);
 
+void unit_calc_active_tiles(unit_t* unit);
 
 
 

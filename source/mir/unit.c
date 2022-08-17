@@ -37,7 +37,7 @@ static int _unit_textures[UNIT_COUNT][2] =
 };
 
 
-int units_count = 0;
+int units_count;
 unit_t* units[10];
 
 void unit_init(unit_t* unit, int type, int team, int x, int y);
@@ -58,6 +58,9 @@ unit_t test_unit4;
 
 void units_init()
 {
+    unit_search_path_init();
+
+    units_count = 0;
 //    if(_is_units_init) return;
     unit_init(&test_unit,  WARRIOR, TEAM_RED, 4, 4);
     unit_init(&test_unit2, ARCHER, TEAM_RED, 5, 5);
@@ -144,6 +147,9 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
     {
     case WARRIOR:
         if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 2) { return false; }
+
+// TODO (kotvkvante#1#): unit can swap with teammate unit. ...
+//
         if(tile_dest->entities[UNIT] != 0) if(tile_dest->unit->team == unit->team) { return false; }
         if(tile_dest->entities[FIELD] == SEA)
             if(!mir_map_get_team()->is_navigation_reseached) { return false; }
@@ -169,6 +175,40 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
     return true;
 }
 
+bool unit_warrior_can_visit_xy(int x, int y)
+{
+    print_2i(x, y);
+    tile_t* t = mir_map_get_tile(x, y);
+    unit_warrior_can_visit_tile(t);
+}
+
+bool unit_archer_can_visit_xy(int x, int y)
+{
+    tile_t* t = mir_map_get_tile(x, y);
+    unit_archer_can_visit_tile(t);
+}
+
+bool unit_warrior_can_visit_tile(tile_t* tile_dest)
+{
+    if(tile_dest->entities[FIELD] == SEA)
+        if(!mir_map_get_team()->is_navigation_reseached) { return false; }
+    if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
+        if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
+
+    return true;
+}
+
+bool unit_archer_can_visit_tile(tile_t* tile_dest)
+{
+    if(tile_dest->entities[FIELD] == SEA)
+        if(!mir_map_get_team()->is_navigation_reseached) { return false; }
+    if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
+        if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
+
+    return true;
+}
+
+
 bool unit_can_move_xy(int sx, int sy, int ex, int ey)
 {
     unit_t* unit = mir_map_get_tile(sx, sy)->unit;
@@ -176,8 +216,6 @@ bool unit_can_move_xy(int sx, int sy, int ex, int ey)
 
     return unit_can_move(unit, tile);
 }
-
-
 
 void unit_move(unit_t* unit, tile_t* tile_dest)
 {
@@ -348,13 +386,32 @@ void unit_move_e_random(event_arg_t* arg)
 ////    unit_print_info(unit);
 //}
 
-
-
-void unit_gen_active_tiles()
+void unit_calc_active_tiles(unit_t* unit)
 {
-//    _push_
-}
+    if(unit == NULL) { log_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return; };
+    unit_search_path_clear();
+    if(unit->energy == 0) return;
 
+
+
+    switch(unit->type)
+    {
+    case WARRIOR:
+        unit_search_path(unit);
+    break;
+
+    case ARCHER:
+
+    break;
+
+    default:
+        log_msg_s(DEFAULT_C, "Untracked unit.", __func__);
+    break;
+    }
+
+    return true;
+
+}
 
 
 

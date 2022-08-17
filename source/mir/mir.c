@@ -71,10 +71,10 @@ void mir_init()
 
     mir_map_set_size(DEFAULT_MAP_SIZE);
     mir.tiles = malloc(sizeof(tile_t) * DEFAULT_MAP_SIZE * DEFAULT_MAP_SIZE);
-    mir.selected_tile = (point2i_t)
-    {
-        3, 5
-    };
+    mir.selected_tile.x = -1;
+//    = (point2i_t) {
+//        3, 5
+//    };
 
     mir_map_gen();
 }
@@ -186,6 +186,12 @@ DESELECT:
 SELECT:
 //    here;
     mir_map_set_selected_tile(hovered_tile);
+
+    if(hovered_tile->entities[UNIT] != NO_UNIT)
+        if(hovered_tile->unit->team == mir_get_turn())
+            unit_calc_active_tiles(hovered_tile->unit);
+
+
     return;
 }
 
@@ -623,6 +629,7 @@ void mir_draw_map()
     tile_t* t = mir_map_get_selected_tile(NULL, NULL);
     if(t) tile_draw_info(t);
 
+    //
     if(mir.selected_tile.x != -1)
     {
         tile_draw_info(mir_map_get_selected_tile(NULL, NULL));
@@ -630,12 +637,40 @@ void mir_draw_map()
         tile_draw_begin();
         tile_draw_prepare(mir.selected_tile.x, mir.selected_tile.y);
         tile_draw(&mir.tiles[mir.selected_tile.x * mir.size + mir.selected_tile.y]);
-    }
 
-    tile_draw_hovered_l(mir.hovered_tile.x, mir.hovered_tile.y);
-    tile_draw_begin();
-    tile_draw_prepare(mir.hovered_tile.x, mir.hovered_tile.y);
-    tile_draw(&mir.tiles[mir.hovered_tile.x * mir.size + mir.hovered_tile.y]);
+        tile_t* tile = mir_map_get_selected_tile(NULL, NULL);
+        for(int i = -2; i < 2; i++)
+        {
+            for(int j = -2; j < 2; j++)
+            {
+                if(trav_map_xy(i, j) != 0)
+                {
+
+//                    if(tile->entities[UNIT] != NO_UNIT)
+//                        _tile_draw(TM_ACTIVE_TILE_ATTACK);
+//                    else if(tile->entities[FIELD] == SEA)
+//                        _tile_draw(TM_ACTIVE_TILE_WATER);
+//                    else
+                    print_2i(i, j);
+
+                    tile_draw_prepare(mir.selected_tile.x + i, mir.selected_tile.y + j);
+                    _tile_draw(GET_TEXTURE(TM_ACTIVE_TILE));
+                }
+
+
+            }
+
+        }
+
+    }
+    //
+    if(mir.hovered_tile.x != -1)
+    {
+        tile_draw_hovered_l(mir.hovered_tile.x, mir.hovered_tile.y);
+        tile_draw_begin();
+        tile_draw_prepare(mir.hovered_tile.x, mir.hovered_tile.y);
+        tile_draw(&mir.tiles[mir.hovered_tile.x * mir.size + mir.hovered_tile.y]);
+    }
 
     tile_draw_end();
 }
@@ -844,6 +879,13 @@ void mir_map_handle_hovered(int x, int y)
     }
 }
 
+void mir_map_unhover()
+{
+    if(mir.hovered_tile.x != -1)
+    {
+        mir.hovered_tile.x = -1;
+    }
+}
 
 void mir_map_handle_hovered_f(float x, float y)
 {
