@@ -141,7 +141,10 @@ bool unit_can_attack(unit_t* unit, tile_t* tile_dest)
 
 bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 {
+    print_2i(unit->team, mir_get_turn());
+    if(unit->team != mir_get_turn()) { return false;}
     if(unit->energy == 0) return false;
+
 
     switch(unit->type)
     {
@@ -177,7 +180,7 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 
 bool unit_warrior_can_visit_xy(int x, int y)
 {
-    print_2i(x, y);
+//    print_2i(x, y);
     tile_t* t = mir_map_get_tile(x, y);
     unit_warrior_can_visit_tile(t);
 }
@@ -221,6 +224,8 @@ void unit_move(unit_t* unit, tile_t* tile_dest)
 {
     if(unit == NULL) { error_msg(DEFAULT_C, "Unit NULL."); return; }
     if(tile_dest == NULL) { error_msg(DEFAULT_C, "Tile NULL."); return; }
+
+
 
     unit->x = tile_dest->x;
     unit->y = tile_dest->y;
@@ -284,6 +289,7 @@ void unit_move_xy(int sx, int sy, int ex, int ey)
 
 void unit_move_e(event_arg_t* arg)
 {
+    here;
     if(unit_can_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey))
     {
         unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey);
@@ -325,9 +331,10 @@ void unit_move_e_random(event_arg_t* arg)
 
         unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.sx + dx, arg->move_unit.sy + dy);
         return;
+
     } while(i < 100); // or: ((ex != 0) || (ey != 0))
 
-
+    print_i(i);
     error_msg_s(DEFAULT_C, "%s: unreacheble!!", (char*)__func__);
 }
 
@@ -397,11 +404,11 @@ void unit_calc_active_tiles(unit_t* unit)
     switch(unit->type)
     {
     case WARRIOR:
-        unit_search_path(unit);
+        unit_search_path_8(unit);
     break;
 
     case ARCHER:
-
+        unit_search_path(unit);
     break;
 
     default:

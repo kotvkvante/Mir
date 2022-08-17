@@ -8,6 +8,7 @@
 #include <stdbool.h>
 #include "../math/point.h"
 
+
 typedef enum mir_states_t {MIR_START, MIR_PAUSE, MIR_END} mir_states_t;
 typedef enum team {TEAM_RED = 0, TEAM_BLUE = 1, TEAM_COUNT} team_enum;
 
@@ -24,6 +25,8 @@ enum mir_events { MOVE_UNIT, BUILD_SOMETHING, CHANGE_LANDSCAPE, CHANGE_FIELD };
 typedef struct team_t team_t;
 typedef struct tile_t tile_t;
 typedef struct mir_t mir_t;
+typedef struct event_t event_t;
+
 
 typedef struct player_t player_t;
 typedef struct ai_t ai_t;
@@ -54,6 +57,7 @@ void mir_init();
 void mir_refresh();
 
 void mir_turn();
+void mir_turn_e(event_t* arg);
 int mir_get_turn();
 
 void mir_start();

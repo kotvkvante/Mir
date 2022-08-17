@@ -249,6 +249,11 @@ void mir_turn()
     mir.turn++;
 }
 
+void mir_turn_e(event_t* arg)
+{
+    mir_turn();
+}
+
 int mir_get_turn()
 {
     return mir.turn;
@@ -638,30 +643,23 @@ void mir_draw_map()
         tile_draw_prepare(mir.selected_tile.x, mir.selected_tile.y);
         tile_draw(&mir.tiles[mir.selected_tile.x * mir.size + mir.selected_tile.y]);
 
+
         tile_t* tile = mir_map_get_selected_tile(NULL, NULL);
-        for(int i = -2; i < 2; i++)
+        if(tile->entities[UNIT] != NO_UNIT)
         {
-            for(int j = -2; j < 2; j++)
+            if(tile->unit->team == mir_get_turn())
             {
-                if(trav_map_xy(i, j) != 0)
-                {
-
-//                    if(tile->entities[UNIT] != NO_UNIT)
-//                        _tile_draw(TM_ACTIVE_TILE_ATTACK);
-//                    else if(tile->entities[FIELD] == SEA)
-//                        _tile_draw(TM_ACTIVE_TILE_WATER);
-//                    else
-                    print_2i(i, j);
-
-                    tile_draw_prepare(mir.selected_tile.x + i, mir.selected_tile.y + j);
-                    _tile_draw(GET_TEXTURE(TM_ACTIVE_TILE));
+                for(int i = -2; i < 2; i++) {
+                    for(int j = -2; j < 2; j++) {
+                        if(trav_map_xy(i, j) != 0) {
+                            tile_draw_prepare(mir.selected_tile.x + i, mir.selected_tile.y + j);
+                            _tile_draw(GET_TEXTURE(TM_ACTIVE_TILE));
+                        }
+                    }
                 }
-
-
             }
 
         }
-
     }
     //
     if(mir.hovered_tile.x != -1)

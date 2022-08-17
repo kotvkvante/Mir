@@ -10,9 +10,12 @@
 
 #define _trav(x, y) trav.g[(2 * path_lenght + 1) * (y + 2) + (x + 2)]
 
+#define USP_PROCESS_TILE_XYR(x, y, r) \
+    if(_f(start_x + x, start_y + y)) _trav(x, y).range = r;
 
-#define USP_PROCESS_TILE(x, y) \
-    if(_f(start_x + x, start_y + y)) _trav(x, y).range = 2;
+#define USP_PROCESS_TILE(x, y) USP_PROCESS_TILE_XYR(x, y, 2)
+#define USP_PROCESS_TILE_XY1(x, y) USP_PROCESS_TILE_XYR(x, y, 1)
+
 
 #define _AFTER_PROCESS_TILE_3(x, y) \
     USP_PROCESS_TILE(_USP_arr3[x + 1][y + 1][0], _USP_arr3[x + 1][y + 1][1])   \
@@ -40,6 +43,7 @@
         _trav(x, y).range = 1;              \
         _AFTER_PROCESS_TILE_5(x, y)         \
     }
+
 
 static int _USP_arr5[3][3][5 * 2] =
 {
@@ -137,6 +141,24 @@ void unit_search_path(unit_t* unit)
 #undef _f
 
     trav_print();
+}
+
+void unit_search_path_8(unit_t* unit)
+{
+    int start_x = unit->x, start_y = unit->y;
+
+#define _f unit_archer_can_visit_xy
+
+    USP_PROCESS_TILE_XY1( 1, 1);
+    USP_PROCESS_TILE_XY1( 0, 1);
+    USP_PROCESS_TILE_XY1(-1, 1);
+    USP_PROCESS_TILE_XY1(-1, 0);
+
+    USP_PROCESS_TILE_XY1(-1,-1);
+    USP_PROCESS_TILE_XY1( 0,-1);
+    USP_PROCESS_TILE_XY1( 0,-1);
+    USP_PROCESS_TILE_XY1( 1,-1);
+#undef _f
 }
 
 int trav_map_xy(int x, int y)

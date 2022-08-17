@@ -41,8 +41,15 @@ void bots_process_input()
     {
 //        here;
         bot_process_input(i);
-        mir_turn();
+
     }
+
+    event_t e = {
+        .f = mir_turn_e,
+        .arg = {0},
+    };
+
+    mqueue_fevent_enqueue(e);
 }
 
 void bot_process_input(int id)

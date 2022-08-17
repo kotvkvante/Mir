@@ -122,9 +122,11 @@ void kernel_handle_events()
         {
             case TEAM_RED:
                 player_process_input();
+
                 break;
             case TEAM_BLUE:
                 bots_process_input();
+
                 break;
             default:
                 error_msg(DEFAULT_C, "Untraced team.");
