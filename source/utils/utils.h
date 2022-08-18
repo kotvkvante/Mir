@@ -25,6 +25,4 @@
 
 #define rgb_to_float(a, b, c) (a) / 255.0f, (b) / 255.0f, (c) / 255.0f
 
-int rand_index(int a, int b);
-int rand_index_zero(int b);
 #endif // UTILS_H_INCLUDED

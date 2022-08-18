@@ -328,11 +328,14 @@ void tile_draw(tile_t* tile)
 
     if(tile->entities[UNIT])
     {
-        if(tile->unit->energy > 0 && tile->entities[FIELD] != SEA)
+        if(tile->unit->energy > 0)
         {
-            _tile_draw(GET_TEXTURE(TM_ACTIVE_UNIT));
+            _tile_draw(unit_get_texture(tile->unit));
         }
-        _tile_draw(unit_get_texture(tile->unit));
+        else
+        {
+            _tile_draw(unit_get_texture(tile->unit));
+        }
     }
 
 //    if(tile->entities[UNIT] && (tile->entities[FIELD] == SEA))

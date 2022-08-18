@@ -116,24 +116,38 @@ void mir_map_handle_mouse_button(int btn, int action)
             goto SELECT;
         }
 
-        if(hovered_tile->entities[UNIT] == NO_UNIT)
-        {
-            f = unit_move_e;
-            goto ENQ;
-        }
+        event_t e = {
+        .f = unit_event_move,
+        .arg.move_unit = {
+            .sx = mir.selected_tile.x,
+            .sy = mir.selected_tile.y,
+            .ex = mir.hovered_tile.x,
+            .ey = mir.hovered_tile.y
+        },
+        };
+        mqueue_fevent_enqueue(e);
 
-        if(hovered_tile->unit->team == mir_get_turn())
-        {
-//            here;
-            f = unit_swap_e;
-            goto ENQ;
-        }
+        //
 
-        if(hovered_tile->unit->team != mir_get_turn())
-        {
-            f = unit_attack_e;
-            goto ENQ;
-        }
+
+//        if(hovered_tile->entities[UNIT] == NO_UNIT)
+//        {
+//            f = unit_move_e;
+//            goto ENQ;
+//        }
+//
+//        if(hovered_tile->unit->team == mir_get_turn())
+//        {
+////            here;
+//            f = unit_swap_e;
+//            goto ENQ;
+//        }
+//
+//        if(hovered_tile->unit->team != mir_get_turn())
+//        {
+//            f = unit_attack_e;
+//            goto ENQ;
+//        }
 
 //        if(hovered_tile->entities[UNIT] != NO_UNIT)
 //        {
@@ -142,14 +156,15 @@ void mir_map_handle_mouse_button(int btn, int action)
 //                goto SELECT;
 //            }
 //        }
-        if(selected_tile->unit->team != mir_get_turn())
-        {
-            goto SELECT;
-        }
+
+//        if(selected_tile->unit->team != mir_get_turn())
+//        {
+//            goto SELECT;
+//        }
 
 
-        if(unit_can_move(selected_tile->unit, hovered_tile))
-        {
+//        if(unit_can_move(selected_tile->unit, hovered_tile))
+//        {
 //                mir_event_t e = {
 //                    .type = MOVE_UNIT,
 //                    .move_unit = {mir.selected_tile.x, mir.selected_tile.y, mir.hovered_tile.x, mir.hovered_tile.y}
@@ -158,7 +173,7 @@ void mir_map_handle_mouse_button(int btn, int action)
 
 
 //                unit_move(selected_tile->unit, tile2);
-        }
+//        }
         goto DESELECT;
     }
 
@@ -189,7 +204,10 @@ SELECT:
 
     if(hovered_tile->entities[UNIT] != NO_UNIT)
         if(hovered_tile->unit->team == mir_get_turn())
-            unit_calc_active_tiles(hovered_tile->unit);
+            {
+                unit_calc_active_tiles(hovered_tile->unit);
+//                trav_print();
+            }
 
 
     return;
@@ -431,7 +449,7 @@ void mir_map_gen()
             tile_reset_entities(t);
             tile_rand_field(t);
 //            t->ent |= FIELD_F;
-
+            if(rand() % 2) t->entities[FIELD] = PLAINS;
             if(rand() % 4) continue;
             if(tile_get_entity(t, FIELD) == PLAINS)
             {
@@ -649,8 +667,8 @@ void mir_draw_map()
         {
             if(tile->unit->team == mir_get_turn())
             {
-                for(int i = -2; i < 2; i++) {
-                    for(int j = -2; j < 2; j++) {
+                for(int i = -2; i <= 2; i++) {
+                    for(int j = -2; j <= 2; j++) {
                         if(trav_map_xy(i, j) != 0) {
                             tile_draw_prepare(mir.selected_tile.x + i, mir.selected_tile.y + j);
                             _tile_draw(GET_TEXTURE(TM_ACTIVE_TILE));

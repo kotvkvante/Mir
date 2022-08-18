@@ -44,7 +44,7 @@ void camera_init()
     // camera_set_projection_wh(camera.map_projection, DEFAULT_MAP_SIZE*64.0f, DEFAULT_MAP_SIZE*64.0f);
     // dont forget update map_projection
 
-    camera_set_view_xy(scr.x / 2, scr.y / 2);
+    camera_set_view_xy(scr.x / 2 + 200, scr.y / 2);
 }
 
 void camera_reset_view()

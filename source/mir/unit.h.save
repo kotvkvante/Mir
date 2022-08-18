@@ -31,8 +31,9 @@ typedef struct unit_t
 //    unit_attack_t attack;
 //    unit_move_t move;
 //    unit_draw_t draw;
-    int devision;
-    int id;
+    char* ;
+    int   name_len;
+
 } unit_t;
 
 
@@ -72,7 +73,6 @@ void unit_move_e_random(event_arg_t* arg);
 
 void unit_calc_active_tiles(unit_t* unit);
 
-void unit_gen_unique_devision(unit_t* unit);
 
 
 

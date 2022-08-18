@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Mir" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Option virtualFolders="source/;source/mir/;source/mir/;source/kernel/;source/kernel/;source/graphics/;source/math/;source/mir/;source/gui/;source/utils/" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/RenderToTexture" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+					<Add option="-Wall -ggdb3" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/RenderToTexture" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="/usr/include/freetype2" />
+			<Add directory="source/extern/include" />
+		</Compiler>
+		<Linker>
+			<Add option="-ldl -lglfw -lm -lfreetype" />
+		</Linker>
+		<Unit filename="source/ai/ai.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/ai/ai.h">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/extern/include/KHR/khrplatform.h" />
+		<Unit filename="source/extern/include/glad/glad.h" />
+		<Unit filename="source/extern/src/glad.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/extern/stb/stb_image.h" />
+		<Unit filename="source/extern/stb/stb_image_write.h" />
+		<Unit filename="source/graphics/camera.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/graphics/" />
+		</Unit>
+		<Unit filename="source/graphics/camera.h" />
+		<Unit filename="source/graphics/font.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/graphics/font.h" />
+		<Unit filename="source/graphics/graphics.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/graphics/" />
+		</Unit>
+		<Unit filename="source/graphics/graphics.h" />
+		<Unit filename="source/graphics/shaders.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/graphics/shaders.h" />
+		<Unit filename="source/graphics/texture_map.h" />
+		<Unit filename="source/graphics/textures.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/graphics/" />
+		</Unit>
+		<Unit filename="source/graphics/textures.h" />
+		<Unit filename="source/graphics/vertices.h">
+			<Option virtualFolder="source/graphics/" />
+		</Unit>
+		<Unit filename="source/gui/button.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/gui/" />
+		</Unit>
+		<Unit filename="source/gui/button.h" />
+		<Unit filename="source/gui/gui.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/gui/gui.h" />
+		<Unit filename="source/gui/label.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/gui/label.h" />
+		<Unit filename="source/kernel/error_handler.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/kernel/" />
+		</Unit>
+		<Unit filename="source/kernel/error_handler.h">
+			<Option virtualFolder="source/kernel/" />
+		</Unit>
+		<Unit filename="source/kernel/kernel.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/kernel/" />
+		</Unit>
+		<Unit filename="source/kernel/kernel.h">
+			<Option virtualFolder="source/kernel/" />
+		</Unit>
+		<Unit filename="source/kernel/kernel_t.h" />
+		<Unit filename="source/kernel/window_events.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/kernel/" />
+		</Unit>
+		<Unit filename="source/kernel/window_events.h">
+			<Option virtualFolder="source/kernel/" />
+		</Unit>
+		<Unit filename="source/main.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/" />
+		</Unit>
+		<Unit filename="source/math/matrix.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/math/" />
+		</Unit>
+		<Unit filename="source/math/matrix.h">
+			<Option virtualFolder="source/math/" />
+		</Unit>
+		<Unit filename="source/math/mrand.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/math/mrand.h" />
+		<Unit filename="source/math/point.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/math/point.h">
+			<Option virtualFolder="source/math/" />
+		</Unit>
+		<Unit filename="source/mir/actor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/mir/actor.h" />
+		<Unit filename="source/mir/mir.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/mir.h">
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/mir_queue.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/mir/mir_queue.h" />
+		<Unit filename="source/mir/team.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/team.h">
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/tile.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/tile.h">
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/unit.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/unit.h">
+			<Option virtualFolder="source/mir/" />
+		</Unit>
+		<Unit filename="source/mir/unit_search_path.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/mir/unit_search_path.h" />
+		<Unit filename="source/player/player.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="source/player/player.h" />
+		<Unit filename="source/utils/utils.c">
+			<Option compilerVar="CC" />
+			<Option virtualFolder="source/utils/" />
+		</Unit>
+		<Unit filename="source/utils/utils.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

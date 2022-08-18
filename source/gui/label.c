@@ -78,8 +78,8 @@ void labels_update()
     tile_t* t = mir_map_get_selected_tile(NULL, NULL);
     if(t)
     {
-        wchar_t buff[128];
-        tile_get_info_wstr(t, buff, 128);
+        wchar_t buff[256] = {0};
+        tile_get_info_wstr(t, buff, 256);
         wtext_set_text(&label_selected_tile.text, buff);
     }
 //    else

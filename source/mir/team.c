@@ -10,13 +10,10 @@
 #include "team.h"
 #include "unit.h"
 
-
-
 team_t teams[TEAM_COUNT];
 
-extern unit_t* _units_red[10];
-extern unit_t* _units_blue[10];
-
+extern unit_t* _units_red[10]; extern int red_id;
+extern unit_t* _units_blue[10]; extern int blue_id;
 
 void init_teams()
 {
@@ -41,5 +38,12 @@ unit_t* team_rand_unit(int team)
 {
 //    print_i(teams[team].units[0]->x);
 //    print_i(teams[team].units[0]->y);
-    return teams[team].units[0];
+    if(team == TEAM_BLUE)
+    {
+        return teams[team].units[rand_index_zero(blue_id - 1 )];
+    }
+    else if(team == TEAM_RED)
+    {
+        return teams[team].units[rand_index_zero(red_id - 1)];
+    }
 }

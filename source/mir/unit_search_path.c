@@ -127,27 +127,24 @@ void unit_search_path(unit_t* unit)
 
 #define _f unit_warrior_can_visit_xy
 
-    USP_PROCESS_TILE_5( 1,  1);
-    USP_PROCESS_TILE_3( 0,  1);
-    USP_PROCESS_TILE_5(-1,  1);
+    USP_PROCESS_TILE_5( 1, 1);
+    USP_PROCESS_TILE_3( 0, 1);
+    USP_PROCESS_TILE_5(-1, 1);
+    USP_PROCESS_TILE_3(-1, 0);
 
-    USP_PROCESS_TILE_3( 1,  0);
-    USP_PROCESS_TILE_3(-1,  0);
-
-    USP_PROCESS_TILE_5( 1, -1);
-    USP_PROCESS_TILE_3( 0, -1);
-    USP_PROCESS_TILE_5(-1, -1);
+    USP_PROCESS_TILE_5(-1,-1);
+    USP_PROCESS_TILE_3( 0,-1);
+    USP_PROCESS_TILE_5( 1,-1);
+    USP_PROCESS_TILE_3( 1, 0);
 
 #undef _f
-
-    trav_print();
 }
 
 void unit_search_path_8(unit_t* unit)
 {
     int start_x = unit->x, start_y = unit->y;
 
-#define _f unit_archer_can_visit_xy
+#define _f unit_warrior_can_visit_xy
 
     USP_PROCESS_TILE_XY1( 1, 1);
     USP_PROCESS_TILE_XY1( 0, 1);
@@ -156,9 +153,10 @@ void unit_search_path_8(unit_t* unit)
 
     USP_PROCESS_TILE_XY1(-1,-1);
     USP_PROCESS_TILE_XY1( 0,-1);
-    USP_PROCESS_TILE_XY1( 0,-1);
     USP_PROCESS_TILE_XY1( 1,-1);
+    USP_PROCESS_TILE_XY1( 1, 0);
 #undef _f
+
 }
 
 int trav_map_xy(int x, int y)

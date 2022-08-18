@@ -53,7 +53,7 @@ void unit_print_info(unit_t* unit);
 unit_t test_unit;
 unit_t test_unit2;
 unit_t test_unit3;
-unit_t test_unit4, test_unit5, test_unit6;
+unit_t test_unit4;
 
 
 void units_init()
@@ -66,8 +66,6 @@ void units_init()
     unit_init(&test_unit2, ARCHER, TEAM_RED, 5, 5);
     unit_init(&test_unit3, WARRIOR, TEAM_RED, 3, 4);
     unit_init(&test_unit4, WARRIOR, TEAM_BLUE, 0, 0);
-    unit_init(&test_unit5, ARCHER, TEAM_BLUE, 0, 1);
-    unit_init(&test_unit6, ARCHER, TEAM_BLUE, 1, 0);
 
     unit_print_info(&test_unit);
 //    _is_units_init = true;
@@ -89,7 +87,6 @@ void unit_init(unit_t* unit, int type, int team, int x, int y)
     unit->type = type;
     unit->team = team;
     unit->energy = 1;
-    unit->heath  = 8;
 
     unit->texture = _unit_textures[type][team];
 
@@ -171,11 +168,8 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 
     case ARCHER:
         if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 8) return false;
-
-        if(tile_dest->entities[FIELD] == SEA)
-            if(!mir_map_get_team()->is_navigation_reseached) { return false; }
-        if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
-            if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
+//        if(tile_dest->entities[UNIT] != 0) if(tile_dest->unit->team == unit->team) return false;
+        if( (tile_dest->entities[FIELD] )== SEA) return false;
 
         return true;
 
@@ -231,8 +225,8 @@ bool unit_can_move_xy(int sx, int sy, int ex, int ey)
 
 void unit_move(unit_t* unit, tile_t* tile_dest)
 {
-    if(unit == NULL) { error_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return; }
-    if(tile_dest == NULL) { error_msg_s(DEFAULT_C, "%s: Tile NULL.", __func__); return; }
+    if(unit == NULL) { error_msg(DEFAULT_C, "Unit NULL."); return; }
+    if(tile_dest == NULL) { error_msg(DEFAULT_C, "Tile NULL."); return; }
 
 
 
@@ -255,8 +249,8 @@ void unit_move(unit_t* unit, tile_t* tile_dest)
 
 void unit_swap(unit_t* unit, tile_t* tile_dest)
 {
-    if(unit == NULL) { error_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return; }
-    if(tile_dest == NULL) { error_msg_s(DEFAULT_C, "%s: Tile NULL.", __func__); return; }
+    if(unit == NULL) { error_msg(DEFAULT_C, "Unit NULL."); return; }
+    if(tile_dest == NULL) { error_msg(DEFAULT_C, "Tile NULL."); return; }
 
     tile_t* tile_from = unit->tile;
 
@@ -298,10 +292,8 @@ void unit_move_xy(int sx, int sy, int ex, int ey)
 
 void unit_event_move(event_arg_t* arg)
 {
-    tile_t* start = mir_map_get_tile_safe(arg->move_unit.sx, arg->move_unit.sy);
-    tile_t* end   = mir_map_get_tile_safe(arg->move_unit.ex, arg->move_unit.ey);
-
-    if( (start == NULL) || (end == NULL) ) return;
+    tile_t* start = mir_map_get_tile(arg->move_unit.sx, arg->move_unit.sy);
+    tile_t* end   = mir_map_get_tile(arg->move_unit.ex, arg->move_unit.ey);
 
     if(start->entities[UNIT] == NO_UNIT) { log_msg_s(GAME_C, "%s: no unit.", (char*)__func__); return; }
     if(start->unit->team != mir_get_turn()) { log_msg_s(GAME_C, "%s: unit from different team.", (char*)__func__); return; }
@@ -313,6 +305,9 @@ void unit_event_move(event_arg_t* arg)
         return;
     }
 
+//    if(start == NULL) error_msg(DEFAULT_C, "Null 1");
+//    if(start->unit == NULL) error_msg(DEFAULT_C, "Null 2");
+//    print_2i(mir_get_turn(), start->unit->team);
     if(end->unit->team == mir_get_turn())
     {
         unit_swap_e(arg);
@@ -338,8 +333,7 @@ void unit_move_e(event_arg_t* arg)
 
 void unit_attack_e(event_arg_t* arg)
 {
-//    if(unit_can_move_xy())
-//    log_msg(DEFAULT_C, "Not implemented.");
+    log_msg(DEFAULT_C, "Not implemented.");
 }
 
 void unit_swap_e(event_arg_t* arg)
@@ -437,7 +431,7 @@ void unit_move_e_random(event_arg_t* arg)
 
 void unit_calc_active_tiles(unit_t* unit)
 {
-    if(unit == NULL) { error_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return; }
+    if(unit == NULL) { log_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return; };
 
     unit_search_path_clear();
     if(unit->energy == 0) return;
@@ -447,11 +441,11 @@ void unit_calc_active_tiles(unit_t* unit)
     switch(unit->type)
     {
     case WARRIOR:
+        unit_search_path(unit);
         unit_search_path_8(unit);
     break;
 
     case ARCHER:
-        unit_search_path(unit);
     break;
 
     default:

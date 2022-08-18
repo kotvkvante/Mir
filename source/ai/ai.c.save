@@ -55,14 +55,14 @@ void bots_process_input()
 void bot_process_input(int id)
 {
     unit_t* u = team_rand_unit(bots[id].team);
-    if(u == NULL) { error_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return;}
+    if(u == NULL) { error_msg(DEFAULT_C, "Null unit."); return;}
     int x = u->x, y = u->y;
 
 //    print_2i(x, y);
 
     event_t e = {
         .f = unit_event_move,
-        .arg.move_unit = {.sx = x, .sy = y, .ex = x + rand_index(-1, 1), .ey = y + rand_index(-1, 1)},
+        .arg.move_unit = {.sx = x, .sy = y, .ex = x + (-1 ... 1), .ey = y + (rand() % 2},
     };
 
 //    here;

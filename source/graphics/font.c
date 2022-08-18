@@ -24,7 +24,7 @@
 #include "font.h"
 
 #define MAX_STR_LENGTH 256
-#define MAX_WSTR_LENGTH 128
+#define MAX_WSTR_LENGTH 256
 
 FT_Library ft2_library;
 FT_Face    face;
