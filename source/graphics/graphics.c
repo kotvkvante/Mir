@@ -1047,8 +1047,10 @@ void draw_map_to_texture()
 {
     int size = mir_map_get_size() * 64;
     if(texture_named_render_begin(&textures.mir_pick_map, size, size) < 0)
+    {
+        log_msg_s(DEFAULT_C, "%s: failed.", __func__);
         return;
-
+    }
     mir_map_draw_pickmap();
     texture_named_render_end();
 }
@@ -1056,8 +1058,10 @@ void draw_map_to_texture()
 void draw_gui_to_texture()
 {
     if(texture_named_render_begin(&textures.mir_pick_map, 0, 0) < 0)
+    {
+        log_msg_s(DEFAULT_C, "%s: failed.", __func__);
         return;
-
+    }
     gui_draw_pickmap();
 
     texture_named_render_end();

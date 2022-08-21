@@ -89,7 +89,7 @@ void unit_init(unit_t* unit, int type, int team, int x, int y)
     unit->type = type;
     unit->team = team;
     unit->energy = 1;
-    unit->heath  = 8;
+    unit->health  = MIR_UNIT_MAX_HEALTH - rand() % 6;
 
     unit->texture = _unit_textures[type][team];
 
@@ -155,11 +155,9 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
     switch(unit->type)
     {
     case WARRIOR:
-        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 2) { return false; }
+//        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 2) { return false; }
 
-// TODO (kotvkvante#1#): unit can swap with teammate unit. ...
-//
-//        if(tile_dest->entities[UNIT] != 0) if(tile_dest->unit->team == unit->team) { return false; }
+        if(trav_map_xy_safe(tile_dest->x - unit->x, tile_dest->y - unit->y) == 0) { return false; }
         if(tile_dest->entities[FIELD] == SEA)
             if(!mir_map_get_team()->is_navigation_reseached) { return false; }
         if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
@@ -167,11 +165,19 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 
         return true;
 
-        break;
+    break;
 
     case ARCHER:
-        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 8) return false;
+//        here;
+//        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 8) return false;
+//        {
+//        int dx = tile_dest->x - unit->x, dy = tile_dest->y - unit->y;
+//        print_2i(dx, dy);
+//        print_i(trav_map_xy_safe(dx, dy));
 
+//        }
+
+        if(trav_map_xy_safe(tile_dest->x - unit->x, tile_dest->y - unit->y) == 0) { return false; }
         if(tile_dest->entities[FIELD] == SEA)
             if(!mir_map_get_team()->is_navigation_reseached) { return false; }
         if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
@@ -179,9 +185,7 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 
         return true;
 
-        break;
-
-
+    break;
     }
 
     return true;
@@ -303,6 +307,7 @@ void unit_event_move(event_arg_t* arg)
 
     if( (start == NULL) || (end == NULL) ) return;
 
+
     if(start->entities[UNIT] == NO_UNIT) { log_msg_s(GAME_C, "%s: no unit.", (char*)__func__); return; }
     if(start->unit->team != mir_get_turn()) { log_msg_s(GAME_C, "%s: unit from different team.", (char*)__func__); return; }
 
@@ -328,7 +333,6 @@ void unit_event_move(event_arg_t* arg)
 
 void unit_move_e(event_arg_t* arg)
 {
-//    here;
     if(unit_can_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey))
     {
         unit_move_xy(arg->move_unit.sx, arg->move_unit.sy, arg->move_unit.ex, arg->move_unit.ey);
@@ -338,6 +342,7 @@ void unit_move_e(event_arg_t* arg)
 
 void unit_attack_e(event_arg_t* arg)
 {
+    log_msg(DEFAULT_C, "ATTACK!");
 //    if(unit_can_move_xy())
 //    log_msg(DEFAULT_C, "Not implemented.");
 }

@@ -83,6 +83,14 @@ static const GLfloat text_coords[] =
     0.0f, 0.0f,
 };
 
+static const GLfloat __text_coords[] =
+{
+    0.0f, 1.0f / 2,
+    1.0f / 2, 1.0f / 2,
+    1.0f / 2, 0.0f,
+    0.0f, 0.0f,
+};
+
 
 static const GLfloat text_coordsx3[] =
 {

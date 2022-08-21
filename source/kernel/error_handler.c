@@ -20,26 +20,27 @@ void _msg(int code)
 
 void log_msg(int code, char* msg)
 {
-	printf("[%s] %s\n", __msg_codes[code], msg);
+	printf("[i][%s] %s\n", __msg_codes[code], msg);
 }
 
 void log_msg_s(int code, char* msg, char* str)
 {
-    printf("[%s] ", __msg_codes[code]);
+    printf("[i][%s] ", __msg_codes[code]);
     printf(msg, str);
     printf("\n");
 }
 
 
+
 void error_msg(int code, char* msg)
 {
-	printf("[%s] %s\n", __msg_codes[code], msg);
+	printf("[e][%s] %s\n", __msg_codes[code], msg);
 	exit(code);
 }
 
 void error_msg_s(int code, char* msg, char* str)
 {
-    printf("[%s] ", __msg_codes[code]);
+    printf("[e][%s] ", __msg_codes[code]);
     printf(msg, str);
     printf("\n");
 	exit(code);

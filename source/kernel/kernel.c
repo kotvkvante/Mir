@@ -130,6 +130,7 @@ void kernel_handle_events()
                 break;
             default:
                 error_msg(DEFAULT_C, "Untraced team.");
+
                 break;
         }
 

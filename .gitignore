@@ -10,6 +10,8 @@
 bin/
 obj/
 
+### ###
+*.save
 
 ### Test files ###
 *.png

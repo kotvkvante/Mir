@@ -35,6 +35,7 @@ texture_9slices_t slices9;
 texture_3slices_t slices3;
 
 
+
 void textures_init()
 {
     textures.tile_map = texture_load("assets/textures/35.png");

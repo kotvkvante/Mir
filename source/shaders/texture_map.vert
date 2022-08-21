@@ -4,7 +4,7 @@ layout (location = 0) in vec3 vertex_position;
 //layout (location = 1) in vec2 texture_coordinates;
 
 uniform ivec2 texture_position;
-uniform int is_solid_color;
+//uniform int is_solid_color;
 
 uniform mat4 projection;
 uniform mat4 view;
@@ -25,6 +25,7 @@ void main()
 	//} 
 	//else
 	//{
+	
 	texture_coord.x = (texture_position.x % 8) + ( (3 - gl_VertexID) * gl_VertexID / 2);
 	texture_coord.y = (texture_position.x / 8) + int( !(bool( (gl_VertexID & 2) >> 1 ))  );	
 	

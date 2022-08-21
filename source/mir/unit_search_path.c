@@ -159,8 +159,22 @@ void unit_search_path_8(unit_t* unit)
 
 }
 
+bool trav_is_on_map_xy(int x, int y)
+{
+    if( (x > path_lenght) || (x < - path_lenght) ) return false;
+    if( (y > path_lenght) || (y < - path_lenght) ) return false;
+
+    return true;
+}
+
 int trav_map_xy(int x, int y)
 {
+    return _trav(x, y).range;
+}
+
+int trav_map_xy_safe(int x, int y)
+{
+    if( !trav_is_on_map_xy(x, y) ) { log_msg_va(DEFAULT_C, "%s: point isn't on trav map: %d %d.", __func__, x, y); return 0; }
     return _trav(x, y).range;
 }
 

@@ -22,7 +22,7 @@ typedef struct unit_t
     int type;
     int team;
     int texture;
-    int heath;
+    int health;
     int state;
 
     int energy;

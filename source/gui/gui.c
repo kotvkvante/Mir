@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../kernel/error_handler.h"
 #include "../utils/utils.h"
 #include "../math/point.h"
 #include "../graphics/font.h"
@@ -43,6 +44,10 @@ void gui_handle_hovered(int t, int id)
 
         case LABEL_T:
             labels_handle_hovered(id);
+        break;
+
+        default:
+            log_msg_s(DEFAULT_C, "%s: Untracked case.", __func__);
         break;
     }
 }

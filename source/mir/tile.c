@@ -318,9 +318,11 @@ void _tile_draw(int texture)
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
+
+
 void tile_draw(tile_t* tile)
 {
-    if(tile == NULL) error_msg(0, "Tile null!\n");
+    if(tile == NULL) { error_msg_s(DEFAULT_C, "%s: Null tile", __func__ ); }
 
     if(tile->entities[FIELD]) _tile_draw(field_textures[(int)tile->entities[FIELD]]);
     if(tile->entities[LANDSCAPE]) _tile_draw(lanscape_textures[(int)tile->entities[LANDSCAPE]]);
@@ -328,11 +330,19 @@ void tile_draw(tile_t* tile)
 
     if(tile->entities[UNIT])
     {
-        if(tile->unit->energy > 0 && tile->entities[FIELD] != SEA)
+        if(tile->unit->energy > 0 && tile->entities[FIELD] != SEA && tile->unit->team == mir_get_turn())
         {
             _tile_draw(GET_TEXTURE(TM_ACTIVE_UNIT));
         }
         _tile_draw(unit_get_texture(tile->unit));
+
+        if(tile->unit->health < MIR_UNIT_MAX_HEALTH)
+        {
+
+            _tile_draw(GET_TEXTURE(TM_HEALTH_POINT) +  3 - ((tile->unit->health) / 2) );
+        }
+
+
     }
 
 //    if(tile->entities[UNIT] && (tile->entities[FIELD] == SEA))
@@ -454,7 +464,7 @@ void tile_get_info_str(tile_t* tile, char* str, int size)
 
 void tile_get_info_wstr(tile_t* tile, wchar_t* str, int size)
 {
-    int x = -1, y = -1, e = -1, team = -1, dev = -1;
+    int x = -1, y = -1, e = -1, team = -1, dev = -1, health = -1;
     if(tile->entities[UNIT] != NO_UNIT)
     {
         x = tile->unit->x;
@@ -462,6 +472,7 @@ void tile_get_info_wstr(tile_t* tile, wchar_t* str, int size)
         e = tile->unit->energy;
         team = tile->unit->team;
         dev = tile->unit->devision;
+        health = tile->unit->health;
     }
     swprintf(str, size, PATTERN_TILE_INFO_WSTR(tile));
 }

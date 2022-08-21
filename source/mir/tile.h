@@ -8,12 +8,12 @@
                                  str_building_info[(int)t->entities[BUILDING]], \
                                  str_unit_info[(int)t->entities[UNIT]]
 
-#define PATTERN_TILE_INFO_WSTR(t) L"Tile[%d, %d] info:\n\tField: %ls\n\tLandscape: %ls\n\tBuilding: %ls\n\tUnit: %ls %dnd devision\n\t [%d %d %d(e) %d(t)]", \
+#define PATTERN_TILE_INFO_WSTR(t) L"Tile[%d, %d] info:\n\tField: %ls\n\tLandscape: %ls\n\tBuilding: %ls\n\tUnit: %ls %dnd devision\n\t [%d %d %d(e) %d(t) %d(h)]", \
                                   t->x, t->y, \
                                   wstr_field_info[(int)t->entities[FIELD]], \
                                   wstr_landscape_info[(int)t->entities[LANDSCAPE]], \
                                   wstr_building_info[(int)t->entities[BUILDING]], \
-                                  wstr_unit_info[(int)t->entities[UNIT]], dev, x, y, e, team
+                                  wstr_unit_info[(int)t->entities[UNIT]], dev, x, y, e, team, health
 
 
 enum tile_entity_types {FIELD, LANDSCAPE, BUILDING, UNIT};
@@ -33,8 +33,8 @@ typedef struct tile_t
     char color;
     char entities[4];
 
-
     unit_t* unit;
+
 
     // depr
     int field_id; // field texture

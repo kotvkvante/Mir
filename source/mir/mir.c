@@ -24,6 +24,7 @@
 #include "unit.h"
 #include "team.h"
 
+
 static float _world_matrix[16];
 static float _map_matrix[16];
 static float _tile_matrix[16];
@@ -52,8 +53,6 @@ point3uc_t team_colors[TEAM_COUNT] =
     [TEAM_RED]  = (point3uc_t){161, 29, 45},
     [TEAM_BLUE] = (point3uc_t){26, 95, 180},
 };
-
-
 
 mir_t mir;
 
@@ -204,10 +203,10 @@ SELECT:
 
     if(hovered_tile->entities[UNIT] != NO_UNIT)
         if(hovered_tile->unit->team == mir_get_turn())
-            {
-                unit_calc_active_tiles(hovered_tile->unit);
-//                trav_print();
-            }
+        {
+            unit_calc_active_tiles(hovered_tile->unit);
+//            trav_print();
+        }
 
 
     return;
@@ -217,37 +216,12 @@ SELECT:
 
 void mir_handle_events(void)
 {
-    event_t e;
+    static event_t e;
     while(mqueue_fevent_dequeue(&e))
     {
         e.f(&e.arg);
     }
-
-    mqueue_reinit();
-
-//    while(mqueue_event_dequeue(&event))
-//    {
-////        print_i(event.type);
-//        switch (event.type)
-//        {
-//        case MOVE_UNIT:
-//            {
-//                tile_t* selected_tile = mir_map_get_tile(event.move_unit.sx, event.move_unit.sy);
-//                tile_t* tile2 = mir_map_get_tile(event.move_unit.ex, event.move_unit.ey);
-//
-//                if(tile2 == NULL || selected_tile == NULL) {error_msg(DEFAULT_C, "Null."); return; }
-//
-//                if(unit_can_move(selected_tile->unit, tile2)) unit_move(selected_tile->unit, tile2);
-//            } break;
-//        case BUILD_SOMETHING:
-//
-//            break;
-//        default:
-//            log_msg(DEFAULT_C, "Untracked event.");
-//            break;
-//        }
-//    }
-}
+    mqueue_reinit();}
 
 void mir_refresh()
 {
@@ -449,7 +423,13 @@ void mir_map_gen()
             tile_reset_entities(t);
             tile_rand_field(t);
 //            t->ent |= FIELD_F;
-            if(rand() % 2) t->entities[FIELD] = PLAINS;
+            #ifdef MIR_MAP_ISLANDS
+                if(rand() % 2) t->entities[FIELD] = SEA;
+            #else
+                if(rand() % 2) t->entities[FIELD] = PLAINS;
+            #endif
+
+
             if(rand() % 4) continue;
             if(tile_get_entity(t, FIELD) == PLAINS)
             {

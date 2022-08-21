@@ -8,6 +8,13 @@
 #include <stdbool.h>
 #include "../math/point.h"
 
+#if 1
+#define MIR_MAP_PLAINS
+#else
+#define MIR_MAP_ISLANDS
+#endif
+
+#define MIR_UNIT_MAX_HEALTH 8
 
 typedef enum mir_states_t {MIR_START, MIR_PAUSE, MIR_END} mir_states_t;
 typedef enum team {TEAM_RED = 0, TEAM_BLUE = 1, TEAM_COUNT} team_enum;
