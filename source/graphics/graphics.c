@@ -62,8 +62,11 @@ void glp_base_init();
 void glp_text_init();
 void glp_texture_map_init();
 void glp_texture_map_s_init(); // solid
+void glp_texture_map_ex_init();
 void glp_3slices_init();
 void glp_point_init();
+
+
 
 #define MIR_RENDER
 gl_program_t gl_program;
@@ -71,6 +74,7 @@ glp_base_t glp_base;
 glp_text_t glp_text;
 glp_texture_map_t glp_texture_map;
 glp_texture_map_s_t glp_texture_map_s; // solid
+glp_texture_map_ex_t glp_texture_map_ex; // extended
 glp_9slices_t glp_9slices;
 glp_3slices_t glp_3slices;
 glp_point_t glp_point;
@@ -144,6 +148,7 @@ void graphics_init()
     PROGRAM(glp_text, "text");
     PROGRAM(glp_texture_map, "texture_map");
     PROGRAM(glp_texture_map_s, "texture_map_solid");
+    PROGRAM(glp_texture_map_ex, "texture_map_ex");
 //    PROGRAM(glp_9slices, "9slices");
     PROGRAM(glp_3slices, "3slices");
     PROGRAM(glp_point, "point");
@@ -155,7 +160,16 @@ void graphics_init()
 
 void graphics_reload_program()
 {
-    PROGRAM(glp_3slices, "3slices");
+//    PROGRAM(glp_base, "base");
+//    PROGRAM(glp_text, "text");
+//    PROGRAM(glp_texture_map, "texture_map");
+//    PROGRAM(glp_texture_map_s, "texture_map_solid");
+    PROGRAM(glp_texture_map_ex, "texture_map_ex");
+//    PROGRAM(glp_9slices, "9slices");
+//    PROGRAM(glp_3slices, "3slices");
+//    PROGRAM(glp_point, "point");
+
+
     log_msg(GRAPHICS_C, "Reload program");
 }
 
@@ -250,8 +264,10 @@ void render_frame()
 
 ////    mir_map_draw_pickmap();
 
+    draw_tile_ex(1, 1);
+    _draw_tile_ex(0, 0);
     mir_draw_team();
-    mir_draw_map();
+//    mir_draw_map();
     mir_map_draw_active();
 
 //
@@ -1105,6 +1121,84 @@ void draw_point(float x, float y)
     glBindBuffer(GL_ARRAY_BUFFER, 0 );
 }
 
+void draw_tile_ex(int x, int y)
+{
+    static float _world_matrix[16], _map_matrix[16], _tile_matrix[16];
+    // begin
+    glEnable(GL_BLEND);
+    glUseProgram(glp_texture_map_ex.id);
+    glBindTexture(GL_TEXTURE_2D, texture_get_tile_map());
+    glBindVertexArray(vao);
+
+    glUniformMatrix4fv(glp_texture_map_ex.projection, 1, GL_FALSE, camera_get_projection());
+    glUniformMatrix4fv(glp_texture_map_ex.view, 1, GL_FALSE, camera_get_view());
+
+    matrix_identity(_world_matrix);
+    matrix_identity(_map_matrix);
+
+    int tmp = mir_map_get_size() >> 1;
+    matrix_translate(_map_matrix, -tmp, -tmp, 0.0f);
+    matrix_scale(_map_matrix, 64.0f, 64.0f, 0.0f);
+
+    // prepare
+
+    matrix_identity(_tile_matrix);
+    matrix_translate(_tile_matrix, x, y, 0.0f);
+    matrix_multiply(_world_matrix, _map_matrix, _tile_matrix);
+    glUniformMatrix4fv(glp_texture_map_ex.model, 1, GL_FALSE, _world_matrix);
+
+    // draw stuff
+
+    glUniform1i(glp_texture_map_ex.texture_position, 0);
+    glUniform1i(glp_texture_map_ex.unit, 16);
+//    glUniform1d(, 0, 0);
+//    glUniform2i(glp_texture_map_ex.texture_position, 0, 0);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    // end
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_BLEND);
+}
+
+void _draw_tile_ex(int x, int y)
+{
+    static float _world_matrix[16], _map_matrix[16], _tile_matrix[16];
+    // begin
+    glEnable(GL_BLEND);
+    glUseProgram(glp_texture_map.id);
+    glBindTexture(GL_TEXTURE_2D, texture_get_tile_map());
+    glBindVertexArray(vao);
+
+    glUniformMatrix4fv(glp_texture_map.projection, 1, GL_FALSE, camera_get_projection());
+    glUniformMatrix4fv(glp_texture_map.view, 1, GL_FALSE, camera_get_view());
+
+    matrix_identity(_world_matrix);
+    matrix_identity(_map_matrix);
+
+    int tmp = mir_map_get_size() >> 1;
+    matrix_translate(_map_matrix, -tmp, -tmp, 0.0f);
+    matrix_scale(_map_matrix, 64.0f, 64.0f, 0.0f);
+
+    // prepare
+
+    matrix_identity(_tile_matrix);
+    matrix_translate(_tile_matrix, x, y, 0.0f);
+    matrix_multiply(_world_matrix, _map_matrix, _tile_matrix);
+    glUniformMatrix4fv(glp_texture_map.model, 1, GL_FALSE, _world_matrix);
+
+    // draw stuff
+
+//    glUniform1d;
+    glUniform2i(glp_texture_map.texture_position, 0, 0);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    // end
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_BLEND);
+}
+
+
+
 extern GLuint FramebufferName;
 unsigned char gfx_get_pickmap_index(int x, int y, int* p0, int* p1)
 {
@@ -1341,6 +1435,18 @@ void glp_texture_map_s_init()
 #define p glp_texture_map_s
     ATTR(vertex_position);
     UNIF(texture_position);
+    UNIF(projection);
+    UNIF(model);
+    UNIF(view);
+#undef p
+}
+
+void glp_texture_map_ex_init()
+{
+#define p glp_texture_map_ex
+    ATTR(vertex_position);
+    UNIF(texture_position);
+    UNIF(unit);
     UNIF(projection);
     UNIF(model);
     UNIF(view);

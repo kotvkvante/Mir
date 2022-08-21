@@ -318,8 +318,6 @@ void _tile_draw(int texture)
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 }
 
-
-
 void tile_draw(tile_t* tile)
 {
     if(tile == NULL) { error_msg_s(DEFAULT_C, "%s: Null tile", __func__ ); }
@@ -341,8 +339,6 @@ void tile_draw(tile_t* tile)
 
             _tile_draw(GET_TEXTURE(TM_HEALTH_POINT) +  3 - ((tile->unit->health) / 2) );
         }
-
-
     }
 
 //    if(tile->entities[UNIT] && (tile->entities[FIELD] == SEA))

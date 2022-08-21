@@ -62,6 +62,7 @@ void draw_texture_char(GLuint texture, unsigned char ch);
 void draw_texture_text(char* text, int length, GLint texture);
 void draw_texture_text_xy(char* text, int length, GLint texture, float x_start, float y_start);
 void draw_tile(GLuint tile_map, int x0, int y0);
+void draw_tile_ex(int x, int y);
 
 void draw_tile_to_texture();
 void draw_map_to_texture();
@@ -136,6 +137,19 @@ typedef struct glp_texture_map_s_t
     GLint model;            // uniform
 } glp_texture_map_s_t;
 
+
+typedef struct glp_texture_map_ex_t
+{
+    GLuint id;
+    GLint vertex_position;  // attr
+    GLint texture_position; // unif
+    GLint unit;
+
+    GLint projection;       // unif
+    GLint view;             // unif
+    GLint model;            // unif
+} glp_texture_map_ex_t;
+
 typedef struct
 {
     GLuint id;
@@ -189,6 +203,7 @@ typedef struct glp_point_t
     GLint model;
     GLint color;
 } glp_point_t;
+
 
 #endif // MIR_RENDER
 
