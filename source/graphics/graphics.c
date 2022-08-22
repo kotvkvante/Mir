@@ -47,6 +47,9 @@ extern textures_t textures;
 extern GLuint char_texture;
 extern GLuint rendered_texture;
 
+extern int field_textures[];
+extern int landscape_textures[];
+
 extern font_t font;
 extern text_t hello;
 extern wtext_t russia;
@@ -169,7 +172,6 @@ void graphics_reload_program()
 //    PROGRAM(glp_3slices, "3slices");
 //    PROGRAM(glp_point, "point");
 
-
     log_msg(GRAPHICS_C, "Reload program");
 }
 
@@ -264,11 +266,14 @@ void render_frame()
 
 ////    mir_map_draw_pickmap();
 
-    draw_tile_ex(1, 1);
-    _draw_tile_ex(0, 0);
+//    draw_tile_ex_xy(1, 1);
+//    _draw_tile_ex(0, 0);
+//
+//    draw_tile_ex(mir_map_get_tile(2, 2));
+
     mir_draw_team();
-//    mir_draw_map();
-    mir_map_draw_active();
+    mir_draw_map();
+//    mir_map_draw_active();
 
 //
     buttons_draw();
@@ -1121,7 +1126,7 @@ void draw_point(float x, float y)
     glBindBuffer(GL_ARRAY_BUFFER, 0 );
 }
 
-void draw_tile_ex(int x, int y)
+void draw_tile_ex_xy(int x, int y)
 {
     static float _world_matrix[16], _map_matrix[16], _tile_matrix[16];
     // begin
@@ -1149,8 +1154,10 @@ void draw_tile_ex(int x, int y)
 
     // draw stuff
 
-    glUniform1i(glp_texture_map_ex.texture_position, 0);
+    glUniform1i(glp_texture_map_ex.field, 0);
     glUniform1i(glp_texture_map_ex.unit, 16);
+    glUniform1i(glp_texture_map_ex.landscape, 40);
+    glUniform1i(glp_texture_map_ex.building, -1);
 //    glUniform1d(, 0, 0);
 //    glUniform2i(glp_texture_map_ex.texture_position, 0, 0);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -1160,7 +1167,73 @@ void draw_tile_ex(int x, int y)
     glDisable(GL_BLEND);
 }
 
-void _draw_tile_ex(int x, int y)
+void draw_tile_ex(tile_t* tile)
+{
+    static float _world_matrix[16], _map_matrix[16], _tile_matrix[16];
+    // begin
+    glEnable(GL_BLEND);
+    glUseProgram(glp_texture_map_ex.id);
+    glBindTexture(GL_TEXTURE_2D, texture_get_tile_map());
+    glBindVertexArray(vao);
+
+    glUniformMatrix4fv(glp_texture_map_ex.projection, 1, GL_FALSE, camera_get_projection());
+    glUniformMatrix4fv(glp_texture_map_ex.view, 1, GL_FALSE, camera_get_view());
+
+    matrix_identity(_world_matrix);
+    matrix_identity(_map_matrix);
+
+    int tmp = mir_map_get_size() >> 1;
+    matrix_translate(_map_matrix, -tmp, -tmp, 0.0f);
+    matrix_scale(_map_matrix, 64.0f, 64.0f, 0.0f);
+
+    // prepare
+
+    matrix_identity(_tile_matrix);
+    matrix_translate(_tile_matrix, tile->x, tile->y, 0.0f);
+    matrix_multiply(_world_matrix, _map_matrix, _tile_matrix);
+    glUniformMatrix4fv(glp_texture_map_ex.model, 1, GL_FALSE, _world_matrix);
+
+    // draw stuff
+
+    glUniform1i(glp_texture_map_ex.field, field_textures[(int)tile->entities[FIELD]]);
+    glUniform1i(glp_texture_map_ex.unit, tile->unit ? tile->unit->texture : -1);
+    glUniform1i(glp_texture_map_ex.landscape, 40);
+    glUniform1i(glp_texture_map_ex.building, -1);
+//    glUniform1d(, 0, 0);
+//    glUniform2i(glp_texture_map_ex.texture_position, 0, 0);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+
+    // end
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_BLEND);
+}
+
+void _draw_tile_ex(tile_t* tile)
+{
+//    print_i((int)tile->entities[FIELD]);
+//    print_i(field_textures[(int)tile->entities[FIELD]]);
+    glUniform1i(glp_texture_map_ex.field, field_textures[(int)tile->entities[FIELD]]);
+    glUniform1i(glp_texture_map_ex.unit, tile->entities[UNIT] ? tile->unit->texture : -1);
+    glUniform1i(glp_texture_map_ex.landscape, tile->entities[LANDSCAPE] ? landscape_textures[(int)tile->entities[LANDSCAPE]] : -1);
+
+    glUniform1i(glp_texture_map_ex.building, -1);
+    if(tile->entities[UNIT])
+        if(tile->unit->team == mir_get_turn())
+            glUniform1i(glp_texture_map_ex.building, tile->unit->energy ? 21 : -1 );
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+}
+
+void _draw_active_ex(int texture)
+{
+    glUniform1i(glp_texture_map_ex.field, texture);
+    glUniform1i(glp_texture_map_ex.unit, -1);
+    glUniform1i(glp_texture_map_ex.landscape, -1);
+    glUniform1i(glp_texture_map_ex.building, -1);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+}
+
+
+void _draw_tile_ex_xy(int x, int y)
 {
     static float _world_matrix[16], _map_matrix[16], _tile_matrix[16];
     // begin
@@ -1445,8 +1518,12 @@ void glp_texture_map_ex_init()
 {
 #define p glp_texture_map_ex
     ATTR(vertex_position);
-    UNIF(texture_position);
+
+    UNIF(field);
     UNIF(unit);
+    UNIF(landscape);
+    UNIF(building);
+
     UNIF(projection);
     UNIF(model);
     UNIF(view);

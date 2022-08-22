@@ -1,34 +1,53 @@
 #version 330 core
 uniform sampler2D texture;
 
-uniform int texture_position;
+uniform int field;
 uniform int unit;
-// flat in int id;
-// flat in ivec2 _t;
+uniform int landscape;
+uniform int building;
 
 in vec2 texture_coord;
 out vec4 frag_color;
 
-
 void main()
 {
-    vec2 _t;
-    _t.x = texture_coord.x + texture_position % 8;
-    _t.y = texture_coord.y + texture_position / 8;
+    vec2 tc;
+    vec4 field_color = vec4(0);
+    vec4 unit_color = vec4(0);
+    vec4 landscape_color = vec4(0);
+    vec4 building_color = vec4(0);
 
-    vec2 t = vec2(float(_t.x) / 8.0 , float(_t.y) / 8.0);
+    tc.x = texture_coord.x + field % 8;
+    tc.y = texture_coord.y + field / 8;
+    tc = vec2(tc.x / 8.0 , tc.y / 8.0);
+    field_color = texture2D(texture, tc);
 
+    if(unit > 0)
+    {
+        tc.x = texture_coord.x + unit % 8;
+        tc.y = texture_coord.y + unit / 8;
+        tc = vec2(tc.x / 8.0 , tc.y / 8.0);
+        unit_color = texture2D(texture, tc);
+    }
 
-	frag_color = texture2D(texture, t);
+    if(landscape > 0)
+    {
+        tc.x = texture_coord.x + landscape % 8;
+        tc.y = texture_coord.y + landscape / 8;
+        tc = vec2(tc.x / 8.0 , tc.y / 8.0);
+        landscape_color = texture2D(texture, tc);
+    }
 
+    if(building > 0)
+    {
+        tc.x = texture_coord.x + building % 8;
+        tc.y = texture_coord.y + building / 8;
+        tc = vec2(tc.x / 8.0 , tc.y / 8.0);
+        building_color = texture2D(texture, tc);
+    }
 
-    vec2 _unit;
-    _unit.x = texture_coord.x + unit % 8;
-    _unit.y = texture_coord.y + unit / 8;
-    t = vec2(float(_unit.x) / 8.0 , float(_unit.y) / 8.0);
-
-    vec4 unit_color = texture2D(texture, t);
-
-
-    frag_color =  mix(frag_color, unit_color, unit_color.a);
+    frag_color = mix(field_color, landscape_color, landscape_color.a);
+    frag_color = mix(frag_color, building_color, building_color.a);
+    frag_color = mix(frag_color, unit_color, unit_color.a);
+    // frag_color =  mix(frag_color, unit_color, unit_color.a);
 }

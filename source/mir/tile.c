@@ -87,6 +87,7 @@ static wchar_t* wstr_unit_info[] =
 };
 
 extern glp_texture_map_t glp_texture_map;
+extern glp_texture_map_ex_t glp_texture_map_ex;
 extern gl_program_t gl_program;
 extern glp_point_t glp_point;
 
@@ -99,13 +100,13 @@ static float _tile_matrix[16];
 
 int field_textures[FIELDS_COUNT] =
 {
-    [NONE] = GET(TM_SELECTED),
+    [NONE] = -1,
     [PLAINS] = GET(TM_GRASS),
     [SEA]  = GET(TM_WATER),
 //    [OCEAN] = GET(TM_WATER),
 //    [SNOW] = GET(TM_WATER),
 };
-int lanscape_textures[LANDSCAPE_COUNT] =
+int landscape_textures[LANDSCAPE_COUNT] =
 {
     [NONE] = GET(TM_SELECTED),
     [FOREST] = GET(TM_TREE),
@@ -155,7 +156,7 @@ char* landscape_info_str[] =
 
 #define arr_size(arr) const int arr ## _size = sizeof(arr) / sizeof(arr[0])
 arr_size(field_textures);
-arr_size(lanscape_textures);
+arr_size(landscape_textures);
 arr_size(building_textures);
 //arr_size(unit_textures);
 
@@ -164,7 +165,7 @@ arr_size(building_textures);
 static int _sizes[] =
 {
     [FIELD]     = field_textures_size,
-    [LANDSCAPE] = lanscape_textures_size,
+    [LANDSCAPE] = landscape_textures_size,
     [BUILDING]  = building_textures_size,
 //    [UNIT]      = unit_textures_size,
 };
@@ -252,7 +253,7 @@ int tile_field_is(tile_t* t, char entity_code)
 
 void tile_reset_entities(tile_t* t)
 {
-    t->entities[FIELD] = 0;
+    t->entities[FIELD] = NO_FIELD;
     t->entities[LANDSCAPE] = 0;
     t->entities[BUILDING] = 0;
     t->entities[UNIT] = 0;
@@ -289,6 +290,40 @@ void tile_draw_prepare(int x, int y)
     glUniformMatrix4fv(glp_texture_map.model, 1, GL_FALSE, _world_matrix);
 }
 
+
+void tile_draw_begin_ex()
+{
+    glEnable(GL_BLEND);
+    glUseProgram(glp_texture_map_ex.id);
+    glBindTexture(GL_TEXTURE_2D, texture_get_tile_map());
+    glBindVertexArray(vao);
+
+    glUniformMatrix4fv(glp_texture_map_ex.projection, 1, GL_FALSE, camera_get_projection());
+    glUniformMatrix4fv(glp_texture_map_ex.view, 1, GL_FALSE, camera_get_view());
+
+    matrix_identity(_world_matrix);
+    matrix_identity(_map_matrix);
+
+    int tmp = mir_map_get_size() >> 1;
+    matrix_translate(_map_matrix, -tmp, -tmp, 0.0f);
+    matrix_scale(_map_matrix, 64.0f, 64.0f, 0.0f);
+}
+
+void tile_draw_end_ex()
+{
+//    glDisable(GL_BLEND);
+}
+
+void tile_draw_prepare_ex(int x, int y)
+{
+    matrix_identity(_tile_matrix);
+    matrix_translate(_tile_matrix, x, y, 0.0f);
+    matrix_multiply(_world_matrix, _map_matrix, _tile_matrix);
+    glUniformMatrix4fv(glp_texture_map_ex.model, 1, GL_FALSE, _world_matrix);
+}
+
+
+
 void tile_frame_draw_begin()
 {
     glEnable(GL_BLEND);
@@ -323,7 +358,7 @@ void tile_draw(tile_t* tile)
     if(tile == NULL) { error_msg_s(DEFAULT_C, "%s: Null tile", __func__ ); }
 
     if(tile->entities[FIELD]) _tile_draw(field_textures[(int)tile->entities[FIELD]]);
-    if(tile->entities[LANDSCAPE]) _tile_draw(lanscape_textures[(int)tile->entities[LANDSCAPE]]);
+    if(tile->entities[LANDSCAPE]) _tile_draw(landscape_textures[(int)tile->entities[LANDSCAPE]]);
     if(tile->entities[BUILDING]) _tile_draw(building_textures[(int)tile->entities[BUILDING]]);
 
     if(tile->entities[UNIT])
@@ -415,7 +450,7 @@ void tile_draw_single(tile_t* tile, int x, int y)
     tile_draw_prepare(x, y);
 
     if(tile->entities[FIELD]) _tile_draw(field_textures[(int)tile->entities[FIELD]]);
-    if(tile->entities[LANDSCAPE]) _tile_draw(lanscape_textures[(int)tile->entities[LANDSCAPE]]);;
+    if(tile->entities[LANDSCAPE]) _tile_draw(landscape_textures[(int)tile->entities[LANDSCAPE]]);;
     if(tile->entities[BUILDING]) _tile_draw(building_textures[(int)tile->entities[BUILDING]]);;
 //    if(tile->entities[UNIT]) _tile_draw(unit_textures[(int)tile->entities[UNIT]]);;
 
@@ -431,7 +466,7 @@ void tile_draw_info(tile_t* tile)
     tile_draw_prepare(0, 0);
 
     if(tile->entities[FIELD]) _tile_draw(field_textures[(int)tile->entities[FIELD]]);
-    if(tile->entities[LANDSCAPE]) _tile_draw(lanscape_textures[(int)tile->entities[LANDSCAPE]]);;
+    if(tile->entities[LANDSCAPE]) _tile_draw(landscape_textures[(int)tile->entities[LANDSCAPE]]);;
     if(tile->entities[BUILDING]) _tile_draw(building_textures[(int)tile->entities[BUILDING]]);;
 //    if(tile->entities[UNIT]) _tile_draw(unit_textures[(int)tile->entities[UNIT]]);;
 

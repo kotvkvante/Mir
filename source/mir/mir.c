@@ -617,29 +617,85 @@ void mir_map_draw_active()
     tile_draw_end();
 }
 
+//void mir_draw_map()
+//{
+//    tile_draw_begin();
+//    for(int i = 0; i < mir.size; i++)
+//    {
+//        for(int j = 0; j < mir.size; j++)
+//        {
+//            tile_draw_prepare(i, j);
+////            tile_draw(&mir.tiles[i * mir.size + j]);
+//            _draw_tile_ex(&mir.tiles[i * mir.size + j]);
+//        }
+//    }
+//
+//    tile_t* t = mir_map_get_selected_tile(NULL, NULL);
+//    if(t) tile_draw_info(t);
+//
+//    //
+//    if(mir.selected_tile.x != -1)
+//    {
+//        tile_draw_info(mir_map_get_selected_tile(NULL, NULL));
+//        tile_draw_selected_l(mir.selected_tile.x, mir.selected_tile.y);
+//        tile_draw_begin();
+//        tile_draw_prepare(mir.selected_tile.x, mir.selected_tile.y);
+//        tile_draw(&mir.tiles[mir.selected_tile.x * mir.size + mir.selected_tile.y]);
+//
+//
+//        tile_t* tile = mir_map_get_selected_tile(NULL, NULL);
+//        if(tile->entities[UNIT] != NO_UNIT)
+//        {
+//            if(tile->unit->team == mir_get_turn())
+//            {
+//                for(int i = -2; i <= 2; i++) {
+//                    for(int j = -2; j <= 2; j++) {
+//                        if(trav_map_xy(i, j) != 0) {
+//                            tile_draw_prepare(mir.selected_tile.x + i, mir.selected_tile.y + j);
+//                            _tile_draw(GET_TEXTURE(TM_ACTIVE_TILE));
+//                        }
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
+//    //
+//    if(mir.hovered_tile.x != -1)
+//    {
+//        tile_draw_hovered_l(mir.hovered_tile.x, mir.hovered_tile.y);
+//        tile_draw_begin();
+//        tile_draw_prepare(mir.hovered_tile.x, mir.hovered_tile.y);
+//        tile_draw(&mir.tiles[mir.hovered_tile.x * mir.size + mir.hovered_tile.y]);
+//    }
+//
+//    tile_draw_end();
+//}
+
 void mir_draw_map()
 {
-    tile_draw_begin();
+    tile_draw_begin_ex();
     for(int i = 0; i < mir.size; i++)
     {
         for(int j = 0; j < mir.size; j++)
         {
-            tile_draw_prepare(i, j);
-            tile_draw(&mir.tiles[i * mir.size + j]);
+            tile_draw_prepare_ex(i, j);
+//            tile_draw(&mir.tiles[i * mir.size + j]);
+            _draw_tile_ex(&mir.tiles[i * mir.size + j]);
         }
     }
 
-    tile_t* t = mir_map_get_selected_tile(NULL, NULL);
-    if(t) tile_draw_info(t);
+//    tile_t* t = mir_map_get_selected_tile(NULL, NULL);
+//    if(t) tile_draw_info(t);
 
     //
     if(mir.selected_tile.x != -1)
     {
         tile_draw_info(mir_map_get_selected_tile(NULL, NULL));
         tile_draw_selected_l(mir.selected_tile.x, mir.selected_tile.y);
-        tile_draw_begin();
-        tile_draw_prepare(mir.selected_tile.x, mir.selected_tile.y);
-        tile_draw(&mir.tiles[mir.selected_tile.x * mir.size + mir.selected_tile.y]);
+        tile_draw_begin_ex();
+        tile_draw_prepare_ex(mir.selected_tile.x, mir.selected_tile.y);
+        _draw_tile_ex(&mir.tiles[mir.selected_tile.x * mir.size + mir.selected_tile.y]);
 
 
         tile_t* tile = mir_map_get_selected_tile(NULL, NULL);
@@ -650,8 +706,8 @@ void mir_draw_map()
                 for(int i = -2; i <= 2; i++) {
                     for(int j = -2; j <= 2; j++) {
                         if(trav_map_xy(i, j) != 0) {
-                            tile_draw_prepare(mir.selected_tile.x + i, mir.selected_tile.y + j);
-                            _tile_draw(GET_TEXTURE(TM_ACTIVE_TILE));
+                            tile_draw_prepare_ex(mir.selected_tile.x + i, mir.selected_tile.y + j);
+                            _draw_active_ex(GET_TEXTURE(TM_ACTIVE_TILE));
                         }
                     }
                 }
@@ -659,16 +715,16 @@ void mir_draw_map()
 
         }
     }
-    //
+//    //
     if(mir.hovered_tile.x != -1)
     {
         tile_draw_hovered_l(mir.hovered_tile.x, mir.hovered_tile.y);
-        tile_draw_begin();
-        tile_draw_prepare(mir.hovered_tile.x, mir.hovered_tile.y);
-        tile_draw(&mir.tiles[mir.hovered_tile.x * mir.size + mir.hovered_tile.y]);
+        tile_draw_begin_ex();
+        tile_draw_prepare_ex(mir.hovered_tile.x, mir.hovered_tile.y);
+        _draw_tile_ex(&mir.tiles[mir.hovered_tile.x * mir.size + mir.hovered_tile.y]);
     }
-
-    tile_draw_end();
+//
+    tile_draw_end_ex();
 }
 
 #define p glp_texture_map

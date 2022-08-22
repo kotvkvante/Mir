@@ -15,6 +15,8 @@ typedef struct wtext_t wtext_t;
 typedef struct label_t label_t;
 typedef struct button_t button_t;
 
+typedef struct tile_t tile_t;
+
 void graphics_init();
 
 void opengl_init();
@@ -62,7 +64,10 @@ void draw_texture_char(GLuint texture, unsigned char ch);
 void draw_texture_text(char* text, int length, GLint texture);
 void draw_texture_text_xy(char* text, int length, GLint texture, float x_start, float y_start);
 void draw_tile(GLuint tile_map, int x0, int y0);
-void draw_tile_ex(int x, int y);
+void draw_tile_ex_xy(int x, int y);
+void draw_tile_ex(tile_t* tile);
+void _draw_tile_ex(tile_t* tile);
+
 
 void draw_tile_to_texture();
 void draw_map_to_texture();
@@ -142,8 +147,10 @@ typedef struct glp_texture_map_ex_t
 {
     GLuint id;
     GLint vertex_position;  // attr
-    GLint texture_position; // unif
+    GLint field; // unif
     GLint unit;
+    GLint landscape;
+    GLint building;
 
     GLint projection;       // unif
     GLint view;             // unif
