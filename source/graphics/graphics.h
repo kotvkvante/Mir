@@ -149,6 +149,7 @@ typedef struct glp_texture_map_ex_t
     GLint vertex_position;  // attr
     GLint field; // unif
     GLint unit;
+        GLint unit_healt;
     GLint landscape;
     GLint building;
 

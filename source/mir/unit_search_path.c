@@ -113,7 +113,7 @@ void unit_search_path_init()
 
 //    _trav(1, -1).range = 1;
 
-    trav_print();
+//    trav_print();
 }
 
 void unit_search_path_clear()

@@ -38,7 +38,7 @@ texture_3slices_t slices3;
 
 void textures_init()
 {
-    textures.tile_map = texture_load("assets/textures/35.png");
+    textures.tile_map = texture_load("assets/textures/344.png");
 }
 
 GLuint texture_get_tile_map()

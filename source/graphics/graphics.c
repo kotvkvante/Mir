@@ -22,6 +22,7 @@
 #include "camera.h"
 #include "font.h"
 #include "textures.h"
+#include "texture_map.h"
 #include "../gui/gui.h"
 #include "../mir/mir.h"
 #include "../mir/tile.h"
@@ -1214,6 +1215,7 @@ void _draw_tile_ex(tile_t* tile)
 //    print_i(field_textures[(int)tile->entities[FIELD]]);
     glUniform1i(glp_texture_map_ex.field, field_textures[(int)tile->entities[FIELD]]);
     glUniform1i(glp_texture_map_ex.unit, tile->entities[UNIT] ? tile->unit->texture : -1);
+    glUniform1i(glp_texture_map_ex.unit_healt, tile->entities[UNIT] ? GET_TEXTURE(TM_HEALTH_POINT) + tile->unit->health : 0);
     glUniform1i(glp_texture_map_ex.landscape, tile->entities[LANDSCAPE] ? landscape_textures[(int)tile->entities[LANDSCAPE]] : -1);
 
     glUniform1i(glp_texture_map_ex.building, -1);
@@ -1521,6 +1523,7 @@ void glp_texture_map_ex_init()
 
     UNIF(field);
     UNIF(unit);
+        UNIF(unit_healt);
     UNIF(landscape);
     UNIF(building);
 

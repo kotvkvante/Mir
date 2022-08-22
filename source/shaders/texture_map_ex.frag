@@ -3,6 +3,7 @@ uniform sampler2D texture;
 
 uniform int field;
 uniform int unit;
+    uniform int unit_healt;
 uniform int landscape;
 uniform int building;
 
@@ -16,6 +17,7 @@ void main()
     vec4 unit_color = vec4(0);
     vec4 landscape_color = vec4(0);
     vec4 building_color = vec4(0);
+    vec4 unit_healt_color = vec4(0);
 
     tc.x = texture_coord.x + field % 8;
     tc.y = texture_coord.y + field / 8;
@@ -28,6 +30,12 @@ void main()
         tc.y = texture_coord.y + unit / 8;
         tc = vec2(tc.x / 8.0 , tc.y / 8.0);
         unit_color = texture2D(texture, tc);
+
+        tc.x = texture_coord.x + unit_healt % 8;
+        tc.y = texture_coord.y + unit_healt / 8;
+        tc = vec2(tc.x / 8.0 , tc.y / 8.0);
+        unit_healt_color = texture2D(texture, tc);
+        unit_color = mix(unit_color, unit_healt_color, unit_healt_color.a);
     }
 
     if(landscape > 0)

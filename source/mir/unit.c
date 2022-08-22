@@ -141,7 +141,34 @@ void unit_print_info(unit_t* unit)
 
 bool unit_can_attack(unit_t* unit, tile_t* tile_dest)
 {
-    return false;
+//    if(unit->team != mir_get_turn())
+    if(unit->energy == 0) return false;
+
+    switch(unit->type)
+    {
+    case WARRIOR:
+        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 2) return false;
+
+//        if(tile_dest->entities[FIELD] == SEA)
+//            if(!mir_map_get_team()->is_navigation_reseached) { return false; }
+//        if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
+//            if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
+
+
+    break;
+
+    case ARCHER:
+        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 8) return false;
+
+//        if(tile_dest->entities[FIELD] == SEA)
+//            if(!mir_map_get_team()->is_navigation_reseached) { return false; }
+//        if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
+//            if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
+
+    break;
+    }
+
+    return true;
 }
 
 
@@ -151,19 +178,16 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
     if(unit->team != mir_get_turn()) { return false;}
     if(unit->energy == 0) return false;
 
-
     switch(unit->type)
     {
     case WARRIOR:
 //        if(mir_map_get_distance(unit->x, unit->y, tile_dest->x, tile_dest->y) > 2) { return false; }
-
+        unit_calc_active_tiles(unit);
         if(trav_map_xy_safe(tile_dest->x - unit->x, tile_dest->y - unit->y) == 0) { return false; }
         if(tile_dest->entities[FIELD] == SEA)
             if(!mir_map_get_team()->is_navigation_reseached) { return false; }
         if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
             if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
-
-        return true;
 
     break;
 
@@ -176,14 +200,13 @@ bool unit_can_move(unit_t* unit, tile_t* tile_dest)
 //        print_i(trav_map_xy_safe(dx, dy));
 
 //        }
-
+        unit_calc_active_tiles(unit);
         if(trav_map_xy_safe(tile_dest->x - unit->x, tile_dest->y - unit->y) == 0) { return false; }
         if(tile_dest->entities[FIELD] == SEA)
             if(!mir_map_get_team()->is_navigation_reseached) { return false; }
         if(tile_dest->entities[LANDSCAPE] == MOUNTAIN || tile_dest->entities[LANDSCAPE] == MOUNTAIN_FOREST)
             if(!mir_map_get_team()->is_rock_climbing_reseached) { return false; }
 
-        return true;
 
     break;
     }
@@ -232,6 +255,7 @@ bool unit_can_move_xy(int sx, int sy, int ex, int ey)
 
     return unit_can_move(unit, tile);
 }
+
 
 void unit_move(unit_t* unit, tile_t* tile_dest)
 {
@@ -300,6 +324,14 @@ void unit_move_xy(int sx, int sy, int ex, int ey)
     unit_move(s->unit, e);
 }
 
+void unit_attack(unit_t* unit, tile_t* tile_dest)
+{
+    tile_dest->unit->health--;
+
+    unit->energy = 0;
+}
+
+
 void unit_event_move(event_arg_t* arg)
 {
     tile_t* start = mir_map_get_tile_safe(arg->move_unit.sx, arg->move_unit.sy);
@@ -326,6 +358,7 @@ void unit_event_move(event_arg_t* arg)
 
     if(end->unit->team != mir_get_turn())
     {
+//        here;
         unit_attack_e(arg);
         return;
     }
@@ -342,7 +375,15 @@ void unit_move_e(event_arg_t* arg)
 
 void unit_attack_e(event_arg_t* arg)
 {
-    log_msg(DEFAULT_C, "ATTACK!");
+//    log_msg(DEFAULT_C, "ATTACK!");
+    tile_t* tile = mir_map_get_tile(arg->move_unit.ex, arg->move_unit.ey);
+    unit_t* unit = mir_map_get_tile(arg->move_unit.sx, arg->move_unit.sy)->unit;
+
+    if(unit_can_attack(unit, tile))
+    {
+        unit_attack(unit, tile);
+    }
+
 //    if(unit_can_move_xy())
 //    log_msg(DEFAULT_C, "Not implemented.");
 }
@@ -463,7 +504,7 @@ void unit_calc_active_tiles(unit_t* unit)
         log_msg_s(DEFAULT_C, "Untracked unit.", __func__);
     break;
     }
-    trav_print();
+//    trav_print();
 
 
     return;
