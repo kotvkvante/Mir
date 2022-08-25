@@ -183,10 +183,10 @@ void font_init_atlas()
 	}
 
     texture_load_font_map(tex_width, tex_height, (unsigned char*)png_data);
-	stbi_write_png("font_output.png", tex_width, tex_height, 4, png_data, tex_width * 4);
-
-	free(png_data);
-	free(pixels);
+//	stbi_write_png("font_output.png", tex_width, tex_height, 4, png_data, tex_width * 4);
+//
+//	free(png_data);
+//	free(pixels);
 
 
 //    font.height = face->height / 64;

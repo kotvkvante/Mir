@@ -3,18 +3,14 @@
 
 #include <locale.h>
 
-#include "math/point.h"
-#include "kernel/kernel.h"
-#include "utils/utils.h"
+// #include "math/point.h"
+// #include "kernel/kernel.h"
+// #include "utils/utils.h"
 
-#include "player/player.h"
-// Грабить караваны
-//
+// #include "player/player.h"
 
 int main(int argc, char** argv)
 {
-//	printf("Mir!\n");
-
     kernel_init();
 
 	while(kernel_is_running())
@@ -29,6 +25,5 @@ int main(int argc, char** argv)
 	}
 
   	kernel_close();
-
 	return 0;
 }

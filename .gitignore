@@ -7,11 +7,15 @@
 *.cscope_file_list
 *.cbp
 # generated directories
+
 bin/
 obj/
+build/
 
-### ###
+###  ###
+
 *.save
 
 ### Test files ###
+
 *.png
