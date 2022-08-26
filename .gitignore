@@ -18,4 +18,4 @@ build/
 
 ### Test files ###
 
-*.png
+test_files/
