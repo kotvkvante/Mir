@@ -261,6 +261,7 @@ int _calc_first_line_y_offset(char* str, int length)
 
 static int _text_calc_wstr_width(wchar_t* str, int start, int length)
 {
+//    if(s)
     int res = 0;
     int end = start + length;
     for(int i = start; i < end; i++)

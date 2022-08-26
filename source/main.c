@@ -3,11 +3,7 @@
 
 #include <locale.h>
 
-// #include "math/point.h"
-// #include "kernel/kernel.h"
-// #include "utils/utils.h"
-
-// #include "player/player.h"
+#include "kernel/kernel.h"
 
 int main(int argc, char** argv)
 {

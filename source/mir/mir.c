@@ -22,6 +22,7 @@
 
 #include "tile.h"
 #include "unit.h"
+#include "unit_search_path.h"
 #include "team.h"
 
 
@@ -241,7 +242,7 @@ void mir_turn()
     mir.turn++;
 }
 
-void mir_turn_e(event_t* arg)
+void mir_turn_e(event_arg_t* arg)
 {
     mir_turn();
 }

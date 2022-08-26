@@ -75,9 +75,11 @@ void labels_draw()
 
 void labels_update()
 {
-    tile_t* t = mir_map_get_selected_tile(NULL, NULL);
-    if(t)
+    static tile_t* t = NULL;
+    tile_t* d = mir_map_get_selected_tile(NULL, NULL);
+    if((t != d) && (d != NULL))
     {
+        t = d;
         wchar_t buff[256] = {0};
         tile_get_info_wstr(t, buff, 256);
         wtext_set_text(&label_selected_tile.text, buff);

@@ -11,6 +11,8 @@
 bin/
 obj/
 build/
+debug/
+release/
 
 ###  ###
 

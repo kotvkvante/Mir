@@ -32,7 +32,7 @@ enum mir_events { MOVE_UNIT, BUILD_SOMETHING, CHANGE_LANDSCAPE, CHANGE_FIELD };
 typedef struct team_t team_t;
 typedef struct tile_t tile_t;
 typedef struct mir_t mir_t;
-typedef struct event_t event_t;
+typedef union event_arg_t event_arg_t;
 
 
 typedef struct player_t player_t;
@@ -64,7 +64,8 @@ void mir_init();
 void mir_refresh();
 
 void mir_turn();
-void mir_turn_e(event_t* arg);
+
+void mir_turn_e(event_arg_t* arg);
 int mir_get_turn();
 
 void mir_start();

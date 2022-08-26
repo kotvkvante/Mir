@@ -10,6 +10,7 @@
 
 #include "../math/point.h"
 #include "../math/matrix.h"
+#include "../math/mrand.h"
 
 #include "../kernel/error_handler.h"
 

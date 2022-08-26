@@ -65,6 +65,13 @@ void tile_draw_begin();
 void tile_draw_prepare(int x, int y);
 void tile_draw_end();
 
+void tile_draw_begin_ex();
+void tile_draw_prepare_ex();
+void tile_draw_end_ex();
+
+
+
+
 void _tile_draw(int texture);
 void tile_draw(tile_t* tile);
 void tile_draw_active();

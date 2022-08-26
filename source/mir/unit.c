@@ -2,6 +2,7 @@
 #include <stdlib.h>
 
 #include "../math/point.h"
+#include "../math/mrand.h"
 #include "../utils/utils.h"
 #include "../graphics/texture_map.h"
 #include "../kernel/error_handler.h"
@@ -9,6 +10,7 @@
 #include "mir.h"
 
 #include "unit.h"
+#include "unit_search_path.h"
 #include "tile.h"
 #include "team.h"
 

@@ -67,6 +67,7 @@ void draw_tile(GLuint tile_map, int x0, int y0);
 void draw_tile_ex_xy(int x, int y);
 void draw_tile_ex(tile_t* tile);
 void _draw_tile_ex(tile_t* tile);
+void _draw_active_ex(int texture);
 
 
 void draw_tile_to_texture();
