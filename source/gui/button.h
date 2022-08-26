@@ -1,6 +1,7 @@
 #ifndef BUTTON_INCLUDED
 #define BUTTON_INCLUDED
 
+#include <stdint.h>
 
 typedef struct point2i_t point2i_t;
 typedef struct point3uc_t point3uc_t;
