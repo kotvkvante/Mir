@@ -84,25 +84,15 @@ void labels_update()
 
     if((t != d) && (d != NULL))
     {
-        t = d;
-        printf("VVVV\n");
-
         wchar_t buff[256];
-//        memset(buff, 0, 256 * sizeof(wchar_t));
+        t = d;
         tile_get_info_wstr(t, buff, 256);
-//        setlocale(LC_ALL, "");
-//        printf("1) %ls \n", buff);
-
         wtext_set_text(&label_selected_tile.text, (const wchar_t*)buff);
-//        printf("2) %ls \n", label_selected_tile.text.text);
-        printf("^^^^\n");
-
-//        print_p2i(label_selected_tile.text.rect);
     }
 //    else
 //        label_set_text_s(&label_selected_tile, L"tile: %ls", L"No tile selected.");
 
-//    if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
+    if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
 }
 
 void labels_handle_hovered()

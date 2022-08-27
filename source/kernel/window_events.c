@@ -125,6 +125,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 //        camera_adjust_xy(vec.x, vec.y);
 //    }
 
+    if(KEY_PRESS(GLFW_KEY_1)) team_research_navigation(0);
     if(KEY_PRESS(GLFW_KEY_ENTER)) mir_start();
     if(key == GLFW_KEY_R && action == GLFW_PRESS) camera_reset_view();
 

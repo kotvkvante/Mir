@@ -507,9 +507,7 @@ void tile_get_info_wstr(tile_t* tile, wchar_t* str, int size)
         health = tile->unit->health;
     }
     int res = swprintf(str, size, PATTERN_TILE_INFO_WSTR(tile));
-
-
-    log_msg_va(DEFAULT_C, "%s: res = %d\n", __func__, res);
+    if(res < 0) log_msg_s(DEFAULT_C, "%s: res < 0", __func__);
 }
 
 

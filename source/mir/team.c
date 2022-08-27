@@ -37,6 +37,11 @@ void init_teams()
 //    print_i(teams[TEAM_BLUE].units[0]->y);
 }
 
+void team_research_navigation(int team)
+{
+    teams[team].is_navigation_reseached = true;
+}
+
 unit_t* team_rand_unit(int team)
 {
 //    print_i(teams[team].units[0]->x);

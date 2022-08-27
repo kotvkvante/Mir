@@ -47,7 +47,7 @@ void buttons_init()
     button_init(&button_start_game,
                 L"Mir: Начать игру!\n\nStart Game",
                 (point2i_t){50, 500}, (point3uc_t){60, 120, 180}, (point3uc_t){20, 40, 80});
-    button_bind_event(&button_start_game, hello_world);
+    button_bind_event(&button_start_game, mir_start);
 
     button_init(&button_leave,
                 L"Mir: Leave",

@@ -354,22 +354,16 @@ static point2i_t _calc_wtext_rect(wtext_t* text)
         i++;
     }
 
-    print_2i(char_index, char_count_max);
     if(char_count > char_count_max)
     {
         char_count_max = char_count;
-        char_index = i - char_count;
+        char_index = i - char_count + 1;
     }
-
-    print_2i(char_index, char_count_max);
-    print_i(text->length);
-    if(char_index + char_count_max > text->length) error_msg_s(DEFAULT_C, "%s {char_index + char_count_max > text->length}", __func__);
 
     int width = _text_calc_wstr_width(text->text, char_index, char_count_max);
 
-    point2i_t res = {width, line_count * font.height};
-    print_p2i(res);
-    return res;
+    point2i_t rect = {width, line_count * font.height};
+    return rect;
 }
 
 
@@ -429,43 +423,16 @@ void wtext_set_text(wtext_t* text, const wchar_t* str)
 {
     if(text->text != NULL)
     {
-        if(text->text == NULL)
-        {
-            error_msg(DEFAULT_C, "NULL!");
-        }
-
         free(text->text);
     }
-//    wprintf(L"%d -> %ls\n",(text->length), str);
 
     text->length = wcslen(str);
-    if(str[text->length] != L'\0') error_msg(DEFAULT_C, "String is not null terminated.");
-
-//    if(text->length < 0)
     if(text->length > MAX_WSTR_LENGTH) error_msg(DEFAULT_C, "Text string length > MAX_WSTR_LENGTH");
+
     text->text = malloc( (text->length + 1) * sizeof(wchar_t));
     if(text->text == NULL) error_msg(DEFAULT_C, "NULL");
 
-//    print_i(text->length);
-//    wcscpy(text->text, str);
-    for(int i = 0; i < text->length; i++)
-    {
-        text->text[i] = str[i];
-    }
-    text->text[text->length] = L'\0';
-
-
-//    if(res == 0)
-//    {
-//        log_msg_s(DEFAULT_C, "%s: res != 0", __func__);
-//    }
-//    if(text->text[text->length + 1] != L'\0')
-//    {
-//        wprintf(L">%ls<\n", text->text + text->length);
-//        error_msg(DEFAULT_C, "Text last symbol is not L'\\0'");
-//    }
-//    else wprintf(L"Hi!\n");
-//    wprintf(L"%ls\n", text->text);
+    wcsncpy(text->text, str, text->length + 1);
 
     text->rect = _calc_wtext_rect(text);
 }
@@ -480,7 +447,7 @@ void wtext_set_text_va(wtext_t* text, const wchar_t *format, ...)
 
     va_list args;
     va_start(args, format);
-    text->length = vswprintf(text->text, MAX_STR_LENGTH, format, args);
+    text->length = vswprintf(text->text, MAX_STR_LENGTH - 1, format, args); // -1 for L'\0'
     va_end(args);
 
     text->rect = _calc_wtext_rect(text);
@@ -491,7 +458,7 @@ void wtext_set_text_ex(wtext_t* text, const wchar_t* format, const wchar_t* str)
     if(text->text != NULL) free(text->text);
 
     text->text = malloc(sizeof(wchar_t) * MAX_STR_LENGTH);
-    text->length = swprintf(text->text, MAX_STR_LENGTH, format, str);
+    text->length = swprintf(text->text, MAX_STR_LENGTH - 1, format, str); // -1 for L'\0'
 
     text->rect = _calc_wtext_rect(text);
 }
@@ -501,17 +468,17 @@ void wtext_set_text_ex_d(wtext_t* text, const wchar_t* format, int d)
     if(text->text != NULL) free(text->text);
 
     text->text = malloc(sizeof(wchar_t) * MAX_STR_LENGTH);
-    text->length = swprintf(text->text, MAX_STR_LENGTH, format, d);
+    text->length = swprintf(text->text, MAX_STR_LENGTH - 1, format, d); // -1 for L'\0'
 
     text->rect = _calc_wtext_rect(text);
 }
 
 void text_init(text_t* text, char* str)
 {
-    text->text = malloc( (strlen(str) + 1) * sizeof(char));
     text->length = strlen(str);
+    text->text = malloc( (text->length + 1) * sizeof(char));
     strcpy(text->text, str);
-    text->text[text->length] = '\0';
+//    text->text[text->length] = '\0';
     text->rect = _calc_text_rect(text);
     text->background = true;
 }
