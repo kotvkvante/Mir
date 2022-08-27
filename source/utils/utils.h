@@ -20,8 +20,8 @@
 #define print_3i(a, b, c) printf("{\n"); print_i(a); print_i(b); print_i(c); printf("}\n")
 #define print_3f(a, b, c) printf("{\n"); print_f(a); print_f(b); print_f(c); printf("}\n")
 
-#define print_p2f(p2) printf("%s{%f, %f}\n", #p2, p2.x, p2.y)
-#define print_p2i(p2) printf("%s{%d, %d}\n", #p2, p2.x, p2.y)
+#define print_p2f(p2) printf("%s: %s{%f, %f}\n", __func__, #p2, p2.x, p2.y)
+#define print_p2i(p2) printf("%s: %s{%d, %d}\n", __func__, #p2, p2.x, p2.y)
 
 #define rgb_to_float(a, b, c) (a) / 255.0f, (b) / 255.0f, (c) / 255.0f
 

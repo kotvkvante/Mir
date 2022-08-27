@@ -38,7 +38,7 @@ void mqueue_reinit()
 //
 bool mqueue_event_enqueue(mir_event_t event)
 {
-    if(queue.front == MQUEUE_MAX_SIZE) {error_msg(DEFAULT_C, "Mqueue max size reached!"); return false;}
+    if(queue.front == MQUEUE_MAX_SIZE) { error_msg(DEFAULT_C, "Mqueue max size reached!"); return false;}
 
     queue.events[queue.front] = event;
     queue.front++;

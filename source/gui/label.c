@@ -15,6 +15,7 @@
 
 #include "../graphics/font.h"
 #include "../utils/utils.h"
+
 #define MAX_LABELS 10
 static label_t** _labels;
 
@@ -73,21 +74,35 @@ void labels_draw()
     }
 }
 
+#include <locale.h>
 void labels_update()
 {
     static tile_t* t = NULL;
     tile_t* d = mir_map_get_selected_tile(NULL, NULL);
+
+    if(d == NULL) t = NULL;
+
     if((t != d) && (d != NULL))
     {
         t = d;
-        wchar_t buff[256] = {0};
+        printf("VVVV\n");
+
+        wchar_t buff[256];
+//        memset(buff, 0, 256 * sizeof(wchar_t));
         tile_get_info_wstr(t, buff, 256);
-        wtext_set_text(&label_selected_tile.text, buff);
+//        setlocale(LC_ALL, "");
+//        printf("1) %ls \n", buff);
+
+        wtext_set_text(&label_selected_tile.text, (const wchar_t*)buff);
+//        printf("2) %ls \n", label_selected_tile.text.text);
+        printf("^^^^\n");
+
+//        print_p2i(label_selected_tile.text.rect);
     }
 //    else
 //        label_set_text_s(&label_selected_tile, L"tile: %ls", L"No tile selected.");
 
-    if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
+//    if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
 }
 
 void labels_handle_hovered()

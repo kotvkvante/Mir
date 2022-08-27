@@ -506,7 +506,10 @@ void tile_get_info_wstr(tile_t* tile, wchar_t* str, int size)
         dev = tile->unit->devision;
         health = tile->unit->health;
     }
-    swprintf(str, size, PATTERN_TILE_INFO_WSTR(tile));
+    int res = swprintf(str, size, PATTERN_TILE_INFO_WSTR(tile));
+
+
+    log_msg_va(DEFAULT_C, "%s: res = %d\n", __func__, res);
 }
 
 

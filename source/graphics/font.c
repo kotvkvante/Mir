@@ -261,13 +261,15 @@ int _calc_first_line_y_offset(char* str, int length)
 
 static int _text_calc_wstr_width(wchar_t* str, int start, int length)
 {
-//    if(s)
     int res = 0;
+    int dw = 0;
     int end = start + length;
     for(int i = start; i < end; i++)
     {
-        res += info[(int)str[i]].advance;
+        dw = info[(int)str[i]].advance;
+        res += dw;
     }
+//    print_i(res);
     return res;
 }
 
@@ -320,14 +322,17 @@ static point2i_t _calc_text_rect(text_t* text)
 
 static point2i_t _calc_wtext_rect(wtext_t* text)
 {
+//    if(text->text[text->length] != L'\0') error_msg(DEFAULT_C, "String is not Null terminated.");
+
     int line_count = 1;
     int char_count = 0;
     int char_count_max = 0;
     int char_index = 0;
 
-    int i = 0;
 //    if(text->text == NULL) error_msg(DEFAULT_C, "Text NULL");
 //    wprintf(text->text[i]);
+
+    int i = 0;
     while(text->text[i])
     {
         char_count++;
@@ -348,14 +353,23 @@ static point2i_t _calc_wtext_rect(wtext_t* text)
         }
         i++;
     }
+
+    print_2i(char_index, char_count_max);
     if(char_count > char_count_max)
     {
         char_count_max = char_count;
-        char_index = i - char_count + 1;
+        char_index = i - char_count;
     }
 
+    print_2i(char_index, char_count_max);
+    print_i(text->length);
+    if(char_index + char_count_max > text->length) error_msg_s(DEFAULT_C, "%s {char_index + char_count_max > text->length}", __func__);
+
     int width = _text_calc_wstr_width(text->text, char_index, char_count_max);
-    return (point2i_t){width, line_count * font.height};
+
+    point2i_t res = {width, line_count * font.height};
+    print_p2i(res);
+    return res;
 }
 
 
@@ -411,18 +425,40 @@ void wtext_init(wtext_t* text, wchar_t* str)
     text->background = true;
 }
 
-
 void wtext_set_text(wtext_t* text, const wchar_t* str)
 {
-    if(text->text != NULL) free(text->text);
+    if(text->text != NULL)
+    {
+        if(text->text == NULL)
+        {
+            error_msg(DEFAULT_C, "NULL!");
+        }
+
+        free(text->text);
+    }
 //    wprintf(L"%d -> %ls\n",(text->length), str);
 
     text->length = wcslen(str);
+    if(str[text->length] != L'\0') error_msg(DEFAULT_C, "String is not null terminated.");
+
+//    if(text->length < 0)
     if(text->length > MAX_WSTR_LENGTH) error_msg(DEFAULT_C, "Text string length > MAX_WSTR_LENGTH");
-    text->text = malloc( (text->length) * sizeof(wchar_t));
+    text->text = malloc( (text->length + 1) * sizeof(wchar_t));
+    if(text->text == NULL) error_msg(DEFAULT_C, "NULL");
 
-    wcsncpy(text->text, str, text->length );
+//    print_i(text->length);
+//    wcscpy(text->text, str);
+    for(int i = 0; i < text->length; i++)
+    {
+        text->text[i] = str[i];
+    }
+    text->text[text->length] = L'\0';
 
+
+//    if(res == 0)
+//    {
+//        log_msg_s(DEFAULT_C, "%s: res != 0", __func__);
+//    }
 //    if(text->text[text->length + 1] != L'\0')
 //    {
 //        wprintf(L">%ls<\n", text->text + text->length);

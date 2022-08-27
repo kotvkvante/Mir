@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include "../math/mrand.h"
 
 #include "../utils/utils.h"
 #include "../kernel/error_handler.h"
