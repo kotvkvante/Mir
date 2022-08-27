@@ -13,8 +13,13 @@ TODO:
 		Improve map generation (procedure generation)
 
 	Sound Effects, Music
-	Beautify gui: buttons, labels. (add checkboxes)
-	Camera zoom in/out, move
+
+	Improve GUI system (mb use GTK+ or ...)
+		Beautify GUI (textures, animations)
+		Add checkboxes
+		Show/hide GUI frames.
+
+	Camera zoom in/out, move, (rotate?)
 
 	Different settings (gamestart settings, sound on/off, fullscreen, loading custom tileset, ...)
 
@@ -23,7 +28,7 @@ TODO:
 		pixels (remove blur)
 		broken opacity (99% -> 100%)
 		add active unit texture
-		
+
 	Improve AI/Bots.
 
 	Add animations (camera movement, unit movement, background animations, tile animations, ...)
