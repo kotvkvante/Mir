@@ -32,6 +32,7 @@ typedef enum {
 button_t button_start_game;
 button_t button_leave;
 button_t button_info;
+button_t button_next_turn;
 
 void hello_world(void) { printf("Hello world!\n"); }
 
@@ -58,6 +59,11 @@ void buttons_init()
                 L"Mir: Info",
                 (point2i_t){50, 300}, (point3uc_t){240, 120, 240}, (point3uc_t){20, 40, 80});
     button_bind_event(&button_info, mir_print_map);
+
+    button_init(&button_next_turn,
+                L"Next Turn",
+                (point2i_t){50, 350}, (point3uc_t){12, 123, 100}, (point3uc_t){23, 124, 234});
+    button_bind_event(&button_next_turn, mir_turn);
 }
 
 void buttons_draw()

@@ -13,9 +13,8 @@ typedef struct ai_t
 void bots_init();
 void bots_process_input();
 
-
 void bot_init(ai_t* bot);
 void bot_handle_events();
 
-void bot_process_input(int id);
+void bot_process_input(int team);
 #endif // AI_H_INCLUDED

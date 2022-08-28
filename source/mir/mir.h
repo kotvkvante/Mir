@@ -73,7 +73,8 @@ int mir_is_started();
 void mir_pause();
 void mir_end();
 
-void mir_handle_events(void);
+void mir_process_events(void);
+//void mir_handle_events(void);
 
 tile_t* mir_map_get_tile(int x, int y);
 tile_t* mir_map_get_tile_safe(int x, int y);

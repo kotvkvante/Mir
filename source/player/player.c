@@ -24,7 +24,8 @@ void players_handle_events(void)
 //    glfwPollEvents();
 //}
 
-void player_process_input()
+void player_process_input(int team)
 {
-    glfwPollEvents();
+    return;
+//    glfwPollEvents();
 }

@@ -213,21 +213,25 @@ SELECT:
     return;
 }
 
-
-
-void mir_handle_events(void)
+void mir_process_events(void)
 {
     static event_t e;
     while(mqueue_fevent_dequeue(&e))
     {
         e.f(&e.arg);
     }
-    mqueue_reinit();}
+    mqueue_reinit();
+}
+
+void mir_handle_input(void)
+{
+    mir.teams[mir.turn].process_input(mir.turn);
+}
+
 
 void mir_refresh()
 {
     units_refresh();
-
 }
 
 void mir_turn()

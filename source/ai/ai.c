@@ -40,7 +40,6 @@ void bots_process_input()
 {
     for(int i = 0; i < bots_count; i++)
     {
-//        here;
         bot_process_input(i);
 
     }
@@ -53,20 +52,31 @@ void bots_process_input()
     mqueue_fevent_enqueue(e);
 }
 
-void bot_process_input(int id)
+void bot_process_input(int team)
 {
-    unit_t* u = team_rand_unit(bots[id].team);
-    if(u == NULL) { error_msg_s(DEFAULT_C, "%s: Unit NULL.", __func__); return;}
-    int x = u->x, y = u->y;
+//    unit_t* u = team_rand_unit(team);
 
-//    print_2i(x, y);
+    team_unit_iterate(team);
+    unit_t* u = team_next_unit();
+    while(u != NULL)
+    {
+        int x = u->x, y = u->y;
+
+        event_t e = {
+            .f = unit_event_move,
+            .arg.move_unit = {.sx = x, .sy = y, .ex = x + rand_index(-1, 1), .ey = y + rand_index(-1, 1)},
+        };
+
+        mqueue_fevent_enqueue(e);
+
+        u = team_next_unit();
+    }
 
     event_t e = {
-        .f = unit_event_move,
-        .arg.move_unit = {.sx = x, .sy = y, .ex = x + rand_index(-1, 1), .ey = y + rand_index(-1, 1)},
+        .f = mir_turn_e,
+        .arg = {0},
     };
 
-//    here;
     mqueue_fevent_enqueue(e);
 }
 

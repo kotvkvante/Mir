@@ -108,6 +108,10 @@ void kernel_update_state(float dt)
     kernel_tick();
     gui_update();
 
+    if(mir_is_started())
+    {
+        mir_process_events();
+    }
 }
 
 
@@ -118,23 +122,23 @@ void kernel_handle_events()
 
     if(mir_is_started())
     {
-        switch(mir_get_turn())
-        {
-            case TEAM_RED:
-                player_process_input();
+        mir_handle_input();
+//        switch(mir_get_turn())
+//        {
+//            case TEAM_RED:
+//                player_process_input();
+//
+//                break;
+//            case TEAM_BLUE:
+//                bots_process_input();
+//
+//                break;
+//            default:
+//                error_msg(DEFAULT_C, "Untraced team.");
+//
+//                break;
+//        }
 
-                break;
-            case TEAM_BLUE:
-                bots_process_input();
-
-                break;
-            default:
-                error_msg(DEFAULT_C, "Untraced team.");
-
-                break;
-        }
-
-        mir_handle_events();
     }
 }
 

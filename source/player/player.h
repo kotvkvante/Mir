@@ -3,7 +3,7 @@
 
 void players_handle_events(void);
 void player_handle_events(int id);
-void player_process_input();
+void player_process_input(int team);
 
 typedef struct player_t
 {
