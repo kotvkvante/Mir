@@ -1,4 +1,4 @@
-![plot"]("assets/screenshots/game.png")
+![game]("assets/screenshots/game.png")
 
 
 # Build #
@@ -6,7 +6,7 @@
 	...
 
 	## Linux ##
-	
+
 	```console
 	mkdir codeblocks
 	cd codeblocks
