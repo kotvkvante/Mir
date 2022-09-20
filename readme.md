@@ -1,4 +1,4 @@
-![game]("assets/screenshots/game.png")
+![game](assets/screenshots/game.png)
 
 
 # Build #
