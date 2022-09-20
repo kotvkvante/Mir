@@ -31,10 +31,10 @@ FT_Face    face;
 
 //char* text_ = "Tell dog my dot me\nAAAaaa aAAafASfasfasf";
 char* text_ = "Mir! \nby kotvkvahte";
-wchar_t* wtext = L"Россия";
+wchar_t* wtext = L"_Text";
 
-text_t hello;
-wtext_t russia;
+text_t hello = {0};
+wtext_t mouse_text = {0};
 
 font_t font;
 glyph_info_t info[NUM_GLYPHS];
@@ -66,8 +66,8 @@ static point2i_t _calc_wtext_rect(wtext_t* text);
 
 void texts_init()
 {
-//    text_init(&hello, text_);
-    wtext_init(&russia, wtext);
+    text_init(&hello, text_);
+    wtext_init(&mouse_text, wtext);
 }
 
 void font_init_atlas()

@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <wchar.h>
 #include <stdarg.h>
+#include <math.h>
 
 #include "../math/point.h"
 #include "../graphics/graphics.h"
@@ -30,14 +31,34 @@ void labels_init()
 {
     _labels = malloc(sizeof(label_t*) * MAX_LABELS);
 
-    label_init(&label_main, L">>> Mir <<<", (point2i_t){50, kernel_get_window_height() - 50}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
+    label_init(
+        &label_main,
+        L">>> Mir <<<",
+        (point2i_t){50, kernel_get_window_height() - 50},
+        (point3uc_t){32, 64, 128},
+        (point3uc_t){128, 64, 32}
+    );
+
 //    label_init(&test, L"||TEST|@#$%^&*~/*-.5/,\nAsSS\n\nMy profile: Мой профиль", (point2i_t){50, 100}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
-    label_init(&label_selected_tile, L"Selected tile: %s", (point2i_t){50, 150}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
-    label_init(&label_fps, L"FPS: %s", (point2i_t){50, 600}, (point3uc_t){16, 255, 128}, (point3uc_t){255, 127, 0});
+    label_init(
+        &label_selected_tile,
+        L"Selected tile: %s",
+        (point2i_t){50, 150},
+        (color_uc_rgb_t){32, 64, 128},
+        (color_uc_rgb_t){128, 64, 32}
+    );
+
+    label_init(
+        &label_fps,
+        L"FPS: %s",
+        (point2i_t){50, 600},
+        (color_uc_rgb_t){16, 1, 128},
+        (color_uc_rgb_t){255, 127, 0}
+    );
 }
 
 
-void label_init(label_t* label, wchar_t* str, point2i_t pos, point3uc_t bc, point3uc_t tc)
+void label_init(label_t* label, wchar_t* str, point2i_t pos, color_uc_rgb_t bc, color_uc_rgb_t tc)
 {
     label->id               = _count; _labels[_count] = label; _count++;
     label->background_color = bc;
@@ -66,6 +87,21 @@ void label_set_text_d(label_t* label, const wchar_t* format, int d)
     wtext_set_text_ex_d(&label->text, format, d);
 }
 
+void label_set_text_color_uc_rgb(label_t* label, color_uc_rgb_t color)
+{
+    label->text_color = color;
+}
+
+void label_set_bg_color_uc_rgb(label_t* label, color_uc_rgb_t color)
+{
+    label->background_color = color;
+}
+
+//void label_set_color_c(label_t* label)
+//{
+//
+//}
+
 void labels_draw()
 {
     for(int i = 0; i < _count; i++)
@@ -93,6 +129,21 @@ void labels_update()
 //        label_set_text_s(&label_selected_tile, L"tile: %ls", L"No tile selected.");
 
     if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
+
+
+    label_set_bg_color_uc_rgb(
+        &label_main,
+        (color_uc_rgb_t){
+            (1.0+sin(2 * glfwGetTime())) * 255.0/2,
+            (1.0+sin(M_PI/3 + glfwGetTime())) * 255.0/2,
+            (1.0+sin(M_PI + glfwGetTime())) * 255.0/2
+
+//            (0.2f + sin(2.0f * glfwGetTime()))/2.0f,
+//            (0.2f + sin(M_PI + 2.0f * glfwGetTime()) / 2.0f),
+//            (0.2f + sin((float)M_PI/rand() + 2.0f * glfwGetTime()) / 2.0f)
+        }
+    );
+
 }
 
 void labels_handle_hovered()

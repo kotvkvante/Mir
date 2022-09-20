@@ -53,7 +53,7 @@ extern int landscape_textures[];
 
 extern font_t font;
 extern text_t hello;
-extern wtext_t russia;
+extern wtext_t mouse_text;
 
 extern glyph_info_t info[NUM_GLYPHS];
 
@@ -287,8 +287,6 @@ void render_frame()
 //    draw_rectangle_whxy3s(textures.tile_map, (point2i_t){100, 64}, (point2i_t){128, 84});
 //    draw_label(&test);
 
-    draw_text_xyrgb(&hello, textures.font_map, 50.0f, 250.0f,  (0.2f + sin(2.0f * glfwGetTime()))/2.0f,
-                                                                 (0.2f + sin(M_PI + 2.0f * glfwGetTime()) / 2.0f), 0.6f);
 
 //    draw_gui_to_texture();
 
@@ -298,8 +296,12 @@ void render_frame()
 //    draw_rectangle_whxy3s(textures.font_map, (point2i_t){180, 64}, (point2i_t){108, 324});
 //    draw_rectangle_whxy3s(textures.font_map, (point2i_t){180, 64}, (point2i_t){900-4, 500});
 //    draw_rectangle_whxy3s(textures.font_map, (point2i_t){180, 64}, (point2i_t){0, 0});
+//    draw_text_xyrgb(&hello, textures.font_map, 50.0f, 250.0f,  (0.2f + sin(2.0f * glfwGetTime()))/2.0f,
+//                                                                 (0.2f + sin(M_PI + 2.0f * glfwGetTime()) / 2.0f), 0.6f);
 
-    draw_wtext_xyrgb(&russia, mouse.x, mouse.y, (0.2f + sin(2.0f * glfwGetTime()))/2.0f,
+
+
+    draw_wtext_xy_rgb(&mouse_text, mouse.x, mouse.y, (0.2f + sin(2.0f * glfwGetTime()))/2.0f,
                                                              (0.2f + sin(M_PI + 2.0f * glfwGetTime()) / 2.0f), 0.6f);
 
 
@@ -538,9 +540,11 @@ void draw_button(button_t* button)
     tmp.y += -button->text.rect.y + font_get_height();
 
     draw_rectangle_2p2i(button->text.rect , tmp);
-    draw_wtext_xyrgb(&button->text,
-                     button->position.x, button->position.y,
-                     button->text_color.x / 255, button->text_color.y / 255, button->text_color.z / 255);
+    draw_wtext_xy_rgb(
+        &button->text,
+        button->position.x, button->position.y,
+        button->text_color.x / 255, button->text_color.y / 255, button->text_color.z / 255
+    );
 }
 
 void draw_button_pickmap(button_t* button)
@@ -555,9 +559,25 @@ void draw_label(label_t* label)
 {
     point2i_t tmp = label->position;
     tmp.y += -label->text.rect.y + font.height;
-    draw_rectangle_2p2i(label->text.rect, tmp);
 
-    draw_wtext_xyrgb(&label->text, label->position.x, label->position.y, 1.0f, 0.4f, 0.2f);
+    draw_rectangle_xy_wh_rgb(
+        tmp,
+        label->text.rect,
+        (point3uc_t){
+            label->background_color.r,
+            label->background_color.g,
+            label->background_color.b
+        }
+    );
+
+    draw_wtext_xy_rgb(
+        &label->text,
+        label->position.x,
+        label->position.y,
+        label->text_color.r,
+        label->text_color.g,
+        label->text_color.b
+    );
 }
 
 void draw_label_pickmap(label_t* label)
@@ -827,6 +847,11 @@ void draw_text_xy(text_t* text_s, GLint font_map, float xpos, float ypos)
 void draw_text_xyrgb(text_t* text_s, GLint font_map, float xpos, float ypos, float r, float g, float b)
 {
 #define p glp_text
+    if(text_s->text == NULL)
+    {
+        return;
+    }
+
     glEnable(GL_BLEND);
 
     glUseProgram(glp_text.id);
@@ -910,9 +935,14 @@ void draw_text_xyrgb(text_t* text_s, GLint font_map, float xpos, float ypos, flo
 #undef p
 }
 
-void draw_wtext_xyrgb(wtext_t* text_s, float xpos, float ypos, float r, float g, float b)
+void draw_wtext_xy_rgb(wtext_t* text_s, float xpos, float ypos, float r, float g, float b)
 {
 #define p glp_text
+    if(text_s->text == NULL)
+    {
+        return;
+    }
+
     glBindVertexArray(0);
 //    print_2f(xpos, ypos);
     draw_point(xpos, ypos);

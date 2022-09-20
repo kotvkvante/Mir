@@ -93,12 +93,15 @@ void button_draw(button_t* button)
     point2i_t tmp = button->position;
     tmp.y += -button->text.rect.y + font_get_height();
 
-    if ( (button->flags & PRESSED) && (button->flags & HOVERED) ) draw_rectangle_xy_wh_rgb(tmp, button->text.rect, (point3uc_t){220, 24, 146});
-    else if(button->flags & HOVERED) draw_rectangle_xy_wh_rgb(tmp, button->text.rect, (point3uc_t){100, 100, 180});
-    else draw_rectangle_2p2i(button->text.rect , tmp);
+    if ( (button->flags & PRESSED) && (button->flags & HOVERED) )
+        draw_rectangle_xy_wh_rgb(tmp, button->text.rect, (point3uc_t){220, 24, 146});
+    else if(button->flags & HOVERED)
+        draw_rectangle_xy_wh_rgb(tmp, button->text.rect, (point3uc_t){100, 100, 180});
+    else
+        draw_rectangle_2p2i(button->text.rect, tmp);
 
 
-    draw_wtext_xyrgb(&button->text,
+    draw_wtext_xy_rgb(&button->text,
                      button->position.x, button->position.y,
                      button->text_color.x / 255, button->text_color.y / 255, button->text_color.z / 255);
 

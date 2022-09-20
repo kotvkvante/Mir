@@ -45,7 +45,7 @@ void draw_button_pickmap(button_t* button);
 void draw_rectangle_l(float x, float y, float w, float h);
 void draw_rectangle_2p2i(point2i_t wh, point2i_t xy);
 void draw_rectangle_xy_wh_rgb(point2i_t xy, point2i_t wh, point3uc_t rgb);
-void draw_wtext_xyrgb(wtext_t* text_s, float xpos, float ypos, float r, float g, float b);
+void draw_wtext_xy_rgb(wtext_t* text_s, float xpos, float ypos, float r, float g, float b);
 
 void draw_point(float x, float y);
 

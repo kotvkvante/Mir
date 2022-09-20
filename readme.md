@@ -1,4 +1,22 @@
-TODO:
+![plot"]("assets/screenshots/game.png")
+
+
+# Build #
+	## Windowns ##
+	...
+
+	## Linux ##
+	
+	```console
+	mkdir codeblocks
+	cd codeblocks
+	cmake -G"Codeblocks - Unix Makefiles" ../
+	make
+	```
+
+
+
+# TODO #
 
 	Add more teams (team's system)
 	Add more unit's (cannon, knight)
@@ -6,7 +24,7 @@ TODO:
 
 
 	Rework tile rendering
-	State system (Game states)
+	State system (Game states: game start, pause, game end, ...)
 	Save/Load game.
 	Client/Server (multiplayer)
 	Map (level) editor
@@ -14,37 +32,41 @@ TODO:
 
 	Sound Effects, Music
 
-	Improve GUI system (mb use GTK+ or ...)
+	Improve GUI system (may be use GTK+ or ...)
 		Beautify GUI (textures, animations)
-		Add checkboxes
+		Add check boxes (for choosing team?)
 		Show/hide GUI frames.
 
 	Camera zoom in/out, move, (rotate?)
 
-	Different settings (gamestart settings, sound on/off, fullscreen, loading custom tileset, ...)
+	Different settings (game start settings, sound on/off, full-screen, loading custom tileset/textures, ...)
 
 	Fix textures
-		curves (edges, grid adjustment)
+		curves (edges, pixel/grid alignment)
 		pixels (remove blur)
 		broken opacity (99% -> 100%)
 		add active unit texture
 
 	Improve AI/Bots.
 
-	Add animations (camera movement, unit movement, background animations, tile animations, ...)
+	Add animations
+		camera movement, unit movement, background animations, tile/texture animations, ...
 
 	Add screen resizing.
 	Add support of OpenGL ES
 
 	Cleanup
+		Remove unused comments
 		Remove unused commented code
-		Remove unused functions, struct members, includes
+		Remove unused functions, structure members, includes
 
-	Fix memory leaks, heap corruptions, etc...
-	Fix all warnings
+	Fix
+		Fix memory leaks, heap corruptions, ...
+		Fix warnings, UB, unsafe code, ...
+		Fix "#include"   
 
 	Move to CMake build system.
-	Win.exe release
+	Windows release
 
 	Check using static analysis.
 

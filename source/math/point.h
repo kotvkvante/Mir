@@ -36,6 +36,11 @@ typedef struct colorf_rgb_t
     float r, g, b;
 } colorf_rgb_t;
 
+typedef struct color_uc_rgb_t
+{
+    unsigned char r, g, b;
+} color_uc_rgb_t;
+
 colorf_rgb_t random_cfrgb();
 
 
