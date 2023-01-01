@@ -3,6 +3,24 @@
 
 #define FRAME_DELTA 60
 
+#define impl(code, name) \
+void kernel_set_state_##name(void) { kernel_set_state(code); }
+
+#define decl(code, name) \
+void kernel_set_state_##name(void);
+
+#define kernel_set_state_funcs(f) \
+f(STT_MENU, menu) \
+f(STT_GAME, game) \
+f(STT_SETTINGS, settings) \
+f(STT_PREPARE_GAME, prepare_game)
+
+kernel_set_state_funcs(decl)
+
+typedef void (*render_frame_f)(void);
+typedef void (*update_state_f)(void);
+typedef void (*handle_events_f)(void);
+
 typedef struct point2f_t point2f_t;
 
 void kernel_init();

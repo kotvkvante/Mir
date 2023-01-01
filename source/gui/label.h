@@ -25,5 +25,8 @@ void labels_init();
 void labels_update();
 void labels_handle_hovered();
 void labels_draw();
+void labels_draw_static();
+void labels_game_prepare_draw();
+
 
 #endif // LABEL_H_INCLUDED

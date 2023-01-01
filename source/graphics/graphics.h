@@ -22,6 +22,11 @@ void graphics_init();
 void opengl_init();
 
 void render_frame();
+void render_frame_menu();
+void render_frame_game();
+void render_frame_prepare_game();
+
+
 void render_frame_to_texture();
 
 void graphics_check_error();

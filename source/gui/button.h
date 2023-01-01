@@ -22,6 +22,9 @@ typedef struct button_t
 
 void buttons_init();
 void buttons_draw();
+void buttons_game_draw();
+
+
 void buttons_draw_pickmap();
 void buttons_handle_hovered(int id);
 void buttons_unhover();
@@ -43,6 +46,8 @@ void button_hide(button_t* button);
 
 void button_rem_flag(button_t* btn, int f);
 void button_set_flag(button_t* btn, int f);
+
+
 //void button_();
 
 #endif // BUTTON_INCLUDED

@@ -1,6 +1,9 @@
 #ifndef MIR_H_INCLUDED
 #define MIR_H_INCLUDED
 
+#define MIR_VERSION 0
+#define MIR_MINOR_VERSION 1
+
 // size of tile in pixels
 #define DEFAULT_MAP_SIZE 10
 #define DEFAULT_TILE_SIZE 64
@@ -42,7 +45,6 @@ typedef struct mir_t
 {
     mir_states_t state;
 
-
     team_enum turn;
     team_t* teams;
     tile_t* tiles;
@@ -52,11 +54,6 @@ typedef struct mir_t
 
     point2i_t selected_tile;
     point2i_t hovered_tile;
-
-    int active_tiles_count;
-    int* active_tiles;
-
-
 } mir_t;
 
 
@@ -69,6 +66,7 @@ void mir_turn_e(event_arg_t* arg);
 int mir_get_turn();
 
 void mir_start();
+void mir_start_game();
 int mir_is_started();
 void mir_pause();
 void mir_end();
@@ -107,7 +105,6 @@ void mir_draw_team();
 void mir_draw_map();
 void mir_map_draw_active();
 void mir_map_draw_pickmap();
-
 
 void mir_map_deselect();
 

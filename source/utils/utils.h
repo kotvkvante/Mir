@@ -1,6 +1,9 @@
 #ifndef UTILS_H_INCLUDED
 #define UTILS_H_INCLUDED
 
+#define xstr(a) str(a)
+#define str(a) #a
+
 #define M_PI 3.14159265358979323846
 
 #define true 1

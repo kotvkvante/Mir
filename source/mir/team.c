@@ -23,7 +23,7 @@ static int unit_number;
 static int units_count;
 static int current_team;
 
-void init_teams()
+void teams_init()
 {
     log_msg(DEFAULT_C, "Init teams.");
     for(int i = 0; i < TEAM_COUNT; i++)

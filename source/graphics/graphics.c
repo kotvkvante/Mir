@@ -60,7 +60,6 @@ extern glyph_info_t info[NUM_GLYPHS];
 
 extern char* text_;
 
-
 void program_init(gl_program_t* program);
 void glp_base_init();
 void glp_text_init();
@@ -242,10 +241,6 @@ void vbo_point_init()
 
 void render_frame()
 {
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glClearColor(0.7f, 0.6f, 0.5f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
 
 //    draw_texture(textures.font_map);
 
@@ -272,13 +267,9 @@ void render_frame()
 //
 //    draw_tile_ex(mir_map_get_tile(2, 2));
 
-    mir_draw_team();
-    mir_draw_map();
 //    mir_map_draw_active();
 
 //
-    buttons_draw();
-    labels_draw();
 
 //    draw_point(100.0f, 100.0f);
 //    draw_point(-kernel_get_window_width()/ 2 , -kernel_get_window_height()/2 );
@@ -309,6 +300,31 @@ void render_frame()
     graphics_check_error();
 //    draw_rectangle_l(0, 0, 64, 64);
 }
+
+void render_frame_menu()
+{
+    buttons_draw_menu();
+    labels_draw_static();
+    labels_menu_draw();
+}
+
+
+void render_frame_game()
+{
+    buttons_game_draw();
+    labels_draw_static();
+    mir_draw_team();
+    mir_draw_map();
+}
+
+void render_frame_prepare_game()
+{
+    buttons_game_prepare_draw();
+    labels_draw_static();
+    labels_game_prepare_draw();
+}
+
+
 
 void render_frame_to_texture()
 {

@@ -27,6 +27,7 @@
 
 
 #include "kernel.h"
+#include "state.h"
 #include "kernel_t.h"
 
 kernel_t kernel;
@@ -51,14 +52,16 @@ void kernel_init()
     textures_init();
     font_init_atlas();
     texts_init();
-    mir_init();
     gui_init();
 
+    mir_init();
 //    units_init(); // duplicate init
-    init_teams();
-    bots_init();
+
+    stt_init_states();
 
 	kernel.is_running = true;
+    kernel_set_state(STT_MENU);
+
 
 	render_frame_to_texture();
 }
@@ -68,7 +71,12 @@ void kernel_render_frame()
 {
     glViewport(0, 0, kernel.window_size.x, kernel.window_size.y);
 
-    render_frame();
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glClearColor(0.7f, 0.6f, 0.5f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    kernel.render_frame();
 
     glfwSwapBuffers(kernel.window);
 }
@@ -141,6 +149,15 @@ void kernel_handle_events()
 
     }
 }
+
+
+
+void kernel_set_state(int state)
+{
+    kernel.render_frame = stt_get_render_frame(state);
+}
+kernel_set_state_funcs(impl);
+
 
 void kernel_set_window_size(float width, float height)
 {

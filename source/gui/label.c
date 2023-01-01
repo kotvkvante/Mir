@@ -13,11 +13,21 @@
 #include "../graphics/font.h"
 #include "../graphics/texture_map.h"
 #include "label.h"
+#include "gui.h"
 
 #include "../graphics/font.h"
 #include "../utils/utils.h"
 
 #define MAX_LABELS 10
+
+extern wchar_t* _map_size_str[];
+extern ivalue_t val_map_size;
+
+point3uc_t label_default_bc = {32, 64, 128}; // Background color
+point3uc_t label_default_tc = {128, 64, 32};   // Text color
+#define LABEL_DEFAULT_COLOR label_default_bc, label_default_tc
+
+
 static label_t** _labels;
 
 static int _count = 0;
@@ -26,20 +36,23 @@ label_t test;
 label_t label_selected_tile;
 label_t label_fps = {.id = -1};
 label_t label_main;
+label_t lbl_prepare_game;
+label_t lbl_map_size;
+
 
 void labels_init()
 {
     _labels = malloc(sizeof(label_t*) * MAX_LABELS);
 
+
     label_init(
         &label_main,
-        L">>> Mir <<<",
+        L">>> Mir " xstr(MIR_VERSION) "." xstr(MIR_MINOR_VERSION) " <<<",
         (point2i_t){50, kernel_get_window_height() - 50},
         (point3uc_t){32, 64, 128},
         (point3uc_t){128, 64, 32}
     );
 
-//    label_init(&test, L"||TEST|@#$%^&*~/*-.5/,\nAsSS\n\nMy profile: Мой профиль", (point2i_t){50, 100}, (point3uc_t){32, 64, 128}, (point3uc_t){128, 64, 32});
     label_init(
         &label_selected_tile,
         L"Selected tile: %s",
@@ -54,6 +67,20 @@ void labels_init()
         (point2i_t){50, 600},
         (color_uc_rgb_t){16, 1, 128},
         (color_uc_rgb_t){255, 127, 0}
+    );
+
+    label_init(
+        &lbl_prepare_game,
+        L"Setup game!",
+        (point2i_t){ kernel_get_window_width()/2, 600},
+        LABEL_DEFAULT_COLOR
+    );
+
+    label_init(
+        &lbl_map_size,
+        _map_size_str[val_map_size],
+        (point2i_t){100, 200},
+        LABEL_DEFAULT_COLOR
     );
 }
 
@@ -102,6 +129,7 @@ void label_set_bg_color_uc_rgb(label_t* label, color_uc_rgb_t color)
 //
 //}
 
+
 void labels_draw()
 {
     for(int i = 0; i < _count; i++)
@@ -110,7 +138,23 @@ void labels_draw()
     }
 }
 
-#include <locale.h>
+void labels_draw_static()
+{
+    draw_label(&label_fps);
+    draw_label(&label_main);
+}
+
+void labels_menu_draw()
+{
+
+}
+
+void labels_game_prepare_draw()
+{
+    draw_label(&lbl_prepare_game);
+    draw_label(&lbl_map_size);
+}
+
 void labels_update()
 {
     static tile_t* t = NULL;
@@ -127,6 +171,8 @@ void labels_update()
     }
 //    else
 //        label_set_text_s(&label_selected_tile, L"tile: %ls", L"No tile selected.");
+
+
 
     if(label_fps.id != -1) label_set_text_d(&label_fps, L"FPS: %d", kernel_get_fps() );
 

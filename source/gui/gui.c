@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <wchar.h>
 
 #include "../kernel/error_handler.h"
 #include "../utils/utils.h"
@@ -10,6 +11,10 @@
 #include "label.h"
 #include "button.h"
 
+extern label_t lbl_map_size;
+ivalue_t val_map_size = 0;
+
+wchar_t* _map_size_str[] = {L"small", L"medium", L"large"};
 
 void gui_init()
 {
@@ -31,7 +36,6 @@ void gui_update()
 
     labels_update();
     handle_hovered();
-
 }
 
 void gui_handle_hovered(int t, int id)
@@ -50,4 +54,20 @@ void gui_handle_hovered(int t, int id)
             log_msg_s(DEFAULT_C, "%s: Untracked case.", __func__);
         break;
     }
+}
+
+void decrease_value()
+{
+    if(val_map_size == 0) return;
+    val_map_size--;
+
+    wtext_set_text(&lbl_map_size.text, _map_size_str[val_map_size]);
+}
+
+void increase_value()
+{
+    if(val_map_size == 2) return;
+    val_map_size++;
+
+    wtext_set_text(&lbl_map_size.text, _map_size_str[val_map_size]);
 }

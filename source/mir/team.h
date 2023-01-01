@@ -17,7 +17,7 @@ typedef struct team_t
 } team_t;
 
 
-void init_teams();
+void teams_init();
 void team_research_navigation(int team);
 
 unit_t* team_rand_unit(int team);

@@ -15,8 +15,8 @@
 #include "../utils/utils.h"
 
 
-#include "kernel_t.h"
 #include "kernel.h"
+#include "kernel_t.h"
 #include "../graphics/font.h"
 #include "../gui/label.h"
 #include "../gui/button.h"

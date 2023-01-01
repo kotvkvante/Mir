@@ -1,8 +1,6 @@
 #ifndef KERNEL_T_H_INCLUDED
 #define KERNEL_T_H_INCLUDED
 
-
-
 typedef struct
 {
 	GLFWwindow* window;
@@ -18,13 +16,8 @@ typedef struct
     double timer_start, timer_end;
     double delta;
 
+    render_frame_f render_frame;
 } kernel_t;
 
-//typedef (void*)
-
-typedef struct
-{
-    int a;
-} state_t;
 
 #endif // KERNEL_T_H_INCLUDED

@@ -19,6 +19,7 @@
 #include "../graphics/camera.h"
 #include "../utils/utils.h"
 #include "../graphics/texture_map.h"
+#include "../gui/gui.h"
 
 #include "tile.h"
 #include "unit.h"
@@ -49,6 +50,8 @@ extern char* unit_info_str[];
 
 extern team_t teams;
 
+extern ivalue_t val_map_size;
+
 point3uc_t team_colors[TEAM_COUNT] =
 {
     [TEAM_RED]  = (point3uc_t){161, 29, 45},
@@ -59,24 +62,46 @@ mir_t mir;
 
 void mir_init()
 {
-    mqueue_init();
-
     mir.turn = TEAM_RED;
     mir.teams = &teams;
     mir.state = MIR_END;
-    mir.active_tiles_count = 0;
-    mir.active_tiles = malloc(sizeof(int) * 9);
+//    mir.active_tiles_count = 0;
+//    mir.active_tiles = malloc(sizeof(int) * 9);
 
-    tiles_init();
+//    tiles_init();
 
-    mir_map_set_size(DEFAULT_MAP_SIZE);
-    mir.tiles = malloc(sizeof(tile_t) * DEFAULT_MAP_SIZE * DEFAULT_MAP_SIZE);
+    mir.size  = DEFAULT_MAP_SIZE;
+    mir.tiles = malloc(sizeof(tile_t) * mir.size * mir.size);
     mir.selected_tile.x = -1;
-//    = (point2i_t) {
-//        3, 5
-//    };
 
+    mqueue_init ();
     mir_map_gen();
+    teams_init  ();
+    bots_init   ();
+}
+
+void mir_map_close()
+{
+    free(mir.tiles);
+//    free(mir.active_tiles);
+}
+
+void mir_start_game()
+{
+    mir_setup( 8 * (1 + val_map_size) );
+}
+
+void mir_setup(int size)
+{
+    mir_map_close();
+
+    mir.size = size;
+    mir.tiles = malloc(sizeof(tile_t) * mir.size * mir.size);
+    mir.selected_tile.x = -1;
+    mir_map_gen();
+    teams_init  ();
+
+    kernel_set_state_game();
 }
 
 void mir_start() { mir.state = MIR_START; }
@@ -117,13 +142,13 @@ void mir_map_handle_mouse_button(int btn, int action)
         }
 
         event_t e = {
-        .f = unit_event_move,
-        .arg.move_unit = {
-            .sx = mir.selected_tile.x,
-            .sy = mir.selected_tile.y,
-            .ex = mir.hovered_tile.x,
-            .ey = mir.hovered_tile.y
-        },
+            .f = unit_event_move,
+                .arg.move_unit = {
+                .sx = mir.selected_tile.x,
+                .sy = mir.selected_tile.y,
+                .ex = mir.hovered_tile.x,
+                .ey = mir.hovered_tile.y
+            },
         };
         mqueue_fevent_enqueue(e);
 
@@ -183,13 +208,13 @@ void mir_map_handle_mouse_button(int btn, int action)
 ENQ:
     {
         event_t e = {
-        .f = f,
-        .arg.move_unit = {
-            .sx = mir.selected_tile.x,
-            .sy = mir.selected_tile.y,
-            .ex = mir.hovered_tile.x,
-            .ey = mir.hovered_tile.y
-        },
+            .f = f,
+            .arg.move_unit = {
+                .sx = mir.selected_tile.x,
+                .sy = mir.selected_tile.y,
+                .ex = mir.hovered_tile.x,
+                .ey = mir.hovered_tile.y
+            },
         };
         mqueue_fevent_enqueue(e);
     }
@@ -259,7 +284,6 @@ int mir_get_turn()
 void mir_map_deselect()
 {
     mir.selected_tile.x = -1;
-    mir.active_tiles_count = 0;
 }
 
 void mir_map_set_selected_tile_xy(int x, int y)
@@ -388,30 +412,6 @@ int mir_map_get_size()
 team_t* mir_map_get_team()
 {
     return &mir.teams[mir.turn];
-}
-
-
-
-void mir_map_add_active(int x, int y)
-{
-    int k = 0;
-    int s = x * mir.size + y;
-
-    for(int i = -1; i <= 1; i++)
-    {
-        for(int j = -1; j <= 1; j++)
-        {
-            if(!mir_map_is_xy_on_map(x+i, y+j)) continue;
-            int t = s + i * mir.size + j;
-
-            if(mir.tiles[t].entities[FIELD] == PLAINS && mir.tiles[t].entities[UNIT] == 0)
-            {
-                mir.active_tiles[k] = t;
-                k++;
-            }
-        }
-    }
-    mir.active_tiles_count = k;
 }
 
 void mir_map_gen()
@@ -611,16 +611,6 @@ void depr_mir_draw_map()
     end_draw_tiles_tm();
 }
 
-void mir_map_draw_active()
-{
-    tile_draw_begin();
-    for(int i = 0; i < mir.active_tiles_count; i++)
-    {
-        tile_draw_prepare(mir.active_tiles[i] / mir.size, mir.active_tiles[i] % mir.size);
-        tile_draw_active();
-    }
-    tile_draw_end();
-}
 
 //void mir_draw_map()
 //{

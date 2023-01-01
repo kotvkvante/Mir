@@ -8,7 +8,9 @@
 #include "../graphics/font.h"
 #include "../mir/mir.h"
 #include "../kernel/kernel.h"
+#include "../kernel/error_handler.h"
 
+#include "gui.h"
 #include "button.h"
 //#include "label.h"
 
@@ -33,9 +35,14 @@ button_t button_start_game;
 button_t button_leave;
 button_t button_info;
 button_t button_next_turn;
+button_t button_menu;
+button_t button_new_game, button_resume_game;
 
-void hello_world(void) { printf("Hello world!\n"); }
+button_t btn_start_game, btn_plus, btn_minus;
 
+point3uc_t button_default_bc = {60, 120, 180}; // Background color
+point3uc_t button_default_tc = {20, 40, 80};   // Text color
+#define BUTTON_DEFAULT_COLOR button_default_bc, button_default_tc
 
 void buttons_init()
 {
@@ -43,12 +50,10 @@ void buttons_init()
     _hovered_button = -1;
     _buttons = malloc(sizeof(button_t*) * MAX_BUTTONS);
 
-
-
     button_init(&button_start_game,
-                L"Mir: Начать игру!\n\nStart Game",
-                (point2i_t){50, 500}, (point3uc_t){60, 120, 180}, (point3uc_t){20, 40, 80});
-    button_bind_event(&button_start_game, mir_start);
+                L"Mir: Начать игру! Start Game!",
+                (point2i_t){50, 500}, button_default_bc, button_default_tc);
+    button_bind_event(&button_start_game, kernel_set_state_game);
 
     button_init(&button_leave,
                 L"Mir: Leave",
@@ -57,25 +62,67 @@ void buttons_init()
 
     button_init(&button_info,
                 L"Mir: Info",
-                (point2i_t){50, 300}, (point3uc_t){240, 120, 240}, (point3uc_t){20, 40, 80});
+                (point2i_t){600, 300}, (point3uc_t){240, 120, 240}, (point3uc_t){20, 40, 80});
     button_bind_event(&button_info, mir_print_map);
 
     button_init(&button_next_turn,
                 L"Next Turn",
                 (point2i_t){50, 350}, (point3uc_t){12, 123, 100}, (point3uc_t){23, 124, 234});
     button_bind_event(&button_next_turn, mir_turn);
+
+    button_init(&button_menu, L"Menu",
+                (point2i_t){50, 400}, (point3uc_t){12, 123, 100}, (point3uc_t){23, 124, 234});
+    button_bind_event(&button_menu, kernel_set_state_menu);
+
+    button_init(&button_resume_game, L"Resume game",
+                (point2i_t){50, 300}, BUTTON_DEFAULT_COLOR);
+    button_bind_event(&button_resume_game, kernel_set_state_game);
+
+    button_init(&button_new_game, L"New game",
+                (point2i_t){50, 200}, BUTTON_DEFAULT_COLOR);
+    button_bind_event(&button_new_game, kernel_set_state_prepare_game);
+
+    button_init(&btn_start_game, L"Start!",
+                (point2i_t){400, 200}, BUTTON_DEFAULT_COLOR);
+    button_init(&btn_plus,  L"+",
+                (point2i_t){200, 200}, BUTTON_DEFAULT_COLOR);
+    button_init(&btn_minus, L"-",
+                (point2i_t){ 60, 200}, BUTTON_DEFAULT_COLOR);
+    button_bind_event(&btn_start_game, mir_start_game);
+    button_bind_event(&btn_plus,  increase_value);
+    button_bind_event(&btn_minus, decrease_value);
 }
 
 void buttons_draw()
 {
     for(int i = 0; i < _count; i++)
         button_draw(_buttons[i]);
+
 //    button_draw(&button_start_game);
 //    button_draw(&button_leave);
 }
 
+void buttons_draw_menu()
+{
+    button_draw(&button_new_game);
+    button_draw(&button_resume_game);
+    button_draw(&button_info);
+}
 
+void buttons_game_draw()
+{
+    button_draw(&button_info);
+    button_draw(&button_next_turn);
+    button_draw(&button_menu);
+}
 
+void buttons_game_prepare_draw()
+{
+    button_draw(&btn_start_game);
+    button_draw(&button_menu);
+    button_draw(&btn_plus);
+    button_draw(&btn_minus);
+}
 
 void buttons_draw_pickmap()
 {
@@ -156,8 +203,6 @@ void buttons_handle_mouse_button(int mouse_btn, int action)
 
 }
 
-
-
 void buttons_handle_mouse_press()
 {
     if(_hovered_button != -1)
@@ -167,14 +212,21 @@ void buttons_handle_mouse_press()
     }
 }
 
-
 void buttons_handle_mouse_release()
 {
     if(_pressed_button == -1) return;
 
     if(_pressed_button == _hovered_button)
     {
-        _buttons[_pressed_button ]->event();
+        button_t* btn = _buttons[_pressed_button ];
+        if(btn->event == NULL)
+        {
+            log_msg(DEFAULT_C, "This button has no event");
+        }
+        else
+        {
+            btn->event();
+        }
     }
 
     button_rem_flag(_buttons[_pressed_button], PRESSED);
@@ -194,7 +246,7 @@ void button_init(button_t* button, wchar_t* str, point2i_t pos, point3uc_t bc, p
     button->background_color = bc;
     button->text_color       = tc;
     button->position         = pos;
-
+    button->event            = NULL;
 
     button_enable(button);
     button_show(button);
